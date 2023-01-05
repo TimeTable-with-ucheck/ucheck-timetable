@@ -29,6 +29,9 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
+
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.github.tlaabs:TimetableView:1.0.3-fx1'
