@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,36 +25,49 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class webcrawling{
+public class webcrawling extends Thread{
     private String URL;
     private WebView webView;
-    private Handler handler;
     private boolean isInit;
 
 
-    public webcrawling(String url, WebView webView , Handler handler){
+    public webcrawling(String url, WebView webView ){
         this.URL = url;
         this.webView = webView;
-        this.handler = handler;
         this.isInit =false;
+    }
+
+    @Override
+    public void run() {
+            init();
+            getTable();
+        if(Thread.interrupted()){
+            System.out.println("종료");
+        }
+
     }
 
     public void init(){
         webView.getSettings().setJavaScriptEnabled(true); //Javascript를 사용하도록 설정
         webView.addJavascriptInterface(new MyJavascriptInterface(), "Android");
-        webView.loadUrl(URL);
+        webView.setWebViewClient(
+                new WebViewClient() {
+                    @Override
+                    public void onLoadResource(WebView view, String url){
+                        try{
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
+                    }
+                });
         isInit = true;
 
     }
     public void getTable(){
-        if(!isInit)this.init();
-            webView.setWebViewClient(
-                    new WebViewClient() {
-                        @Override
-                        public void onLoadResource(WebView view, String url){
-                            view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
-                        }
-                    });
+        if(isInit)
+            webView.loadUrl(URL);
         }
     private String getDay(int day){
         switch (day){
@@ -75,7 +88,6 @@ public class webcrawling{
                 Document doc = Jsoup.parse(html);
                 Elements timetable = doc.getElementsByClass("tablebody");
                 Elements td = timetable.select("td");
-                System.out.println("---------------------------------");
                 if(td.size()>1){
                     ArrayList<Schedule> schedules = new ArrayList<>();
                     getData = true;
