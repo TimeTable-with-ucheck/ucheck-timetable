@@ -1,50 +1,43 @@
 package com.example.myapplication;
 
-import android.content.Intent;
-import android.os.Bundle;
+import static java.lang.Thread.sleep;
+
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
-import com.github.tlaabs.timetableview.TimetableView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-public class webcrawling extends Thread{
+public class webcrawler{
     private String URL;
     private WebView webView;
     private boolean isInit;
+    private boolean isDataGet;
+    private  Handler mHandler;
+    private ArrayList<Schedule> schedules;
 
 
-    public webcrawling(String url, WebView webView ){
+    public webcrawler(String url, WebView webView, Handler mHandler ){
         this.URL = url;
         this.webView = webView;
         this.isInit =false;
+        this.isDataGet = false;
+        this.schedules= new ArrayList<>();
+        this.mHandler = mHandler;
     }
-
-    @Override
-    public void run() {
-            init();
-            getTable();
-        if(Thread.interrupted()){
-            System.out.println("종료");
-        }
-
+    public ArrayList<Schedule> getSchedules(){
+        if (schedules.size() < 1) return null;
+        else return schedules;
     }
 
     public void init(){
@@ -53,13 +46,15 @@ public class webcrawling extends Thread{
         webView.setWebViewClient(
                 new WebViewClient() {
                     @Override
-                    public void onLoadResource(WebView view, String url){
-                        try{
-                            sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                    public void onLoadResource(WebView view, String url) {
+                        if (!isDataGet) {
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
                         }
-                        view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
                     }
                 });
         isInit = true;
@@ -81,26 +76,28 @@ public class webcrawling extends Thread{
     }
 
     public class MyJavascriptInterface {
-        boolean getData = false;
         @JavascriptInterface
         public void getHtml(String html) { //위 자바스크립트가 호출되면 여기로 html이 반환됨
-            if(!getData) {
+            if(!isDataGet) {
                 Document doc = Jsoup.parse(html);
                 Elements timetable = doc.getElementsByClass("tablebody");
                 Elements td = timetable.select("td");
                 if(td.size()>1){
-                    ArrayList<Schedule> schedules = new ArrayList<>();
-                    getData = true;
+                    isDataGet = true;
                     for (int i = 0; i < td.size()-2; i++) {
                         System.out.println(getDay(i) + " ->");
                         Element cols = td.get(i);
                         for(Element e : cols.select("div div")){
-                            schedules.add(addSchedule(e,i));
+                           Schedule schedule= addSchedule(e,i);
+                           if(schedule != null)
+                            schedules.add(schedule);
                        }
                     }
+                    Message message =  Message.obtain();
+                    message.obj = schedules;
+                    mHandler.sendMessage(message);
                 }
             }
-
         }
         private Schedule addSchedule(Element elements, int day){
             if(elements.text().length()>1) {
