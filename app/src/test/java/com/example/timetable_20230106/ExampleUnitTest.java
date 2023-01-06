@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.timetable_20230106;
 
 import org.junit.Test;
 

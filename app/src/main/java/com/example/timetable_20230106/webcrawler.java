@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.timetable_20230106;
 
 import static java.lang.Thread.sleep;
 
@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-public class webcrawler{
+public class webcrawler {
     private String URL;
     private WebView webView;
     private boolean isInit;

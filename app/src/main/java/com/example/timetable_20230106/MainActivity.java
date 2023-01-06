@@ -1,46 +1,39 @@
-package com.example.myapplication.ui.home;
+package com.example.timetable_20230106;
 
-import static android.widget.Toast.makeText;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import com.example.timetable_20230106.databinding.ActivityMainBinding;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.myapplication.R;
-import com.example.myapplication.databinding.FragmentHomeBinding;
-import com.example.myapplication.webcrawler;
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.TimetableView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment {
+public class MainActivity extends AppCompatActivity {
 
-    private FragmentHomeBinding binding;
+    private ActivityMainBinding binding;
     TimetableView Timetable;
     WebView webView;
     FloatingActionButton btn_addTimetable;
     Handler mHandler;
-    String URL = "https://everytime.kr/@9R3YWPXb3olBt7goJkJu";
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         View root = binding.getRoot();
         Timetable = binding.timetable;
         webView = binding.webView;
@@ -48,11 +41,11 @@ public class HomeFragment extends Fragment {
         btn_addTimetable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
                 ad.setIcon(R.mipmap.ic_launcher);
                 ad.setTitle("url입력");
                 ad.setMessage("에타 시간표 공유 url을 넣어주세요");
-                final EditText et = new EditText(getActivity());
+                final EditText et = new EditText(MainActivity.this);
                 ad.setView(et);
                 ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -65,6 +58,7 @@ public class HomeFragment extends Fragment {
                                 super.handleMessage(msg);
                                 Timetable.removeAll();
                                 Timetable.add((ArrayList<Schedule>)msg.obj);
+                                saveState();
 
                             }
                         };
@@ -80,16 +74,32 @@ public class HomeFragment extends Fragment {
                     }
                 });
                 ad.show();
-
             }
         });
-        return root;
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        restoreState();
     }
 
-
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    protected void onPause(){
+        super.onPause();
+        saveState();
+    }
+    private void saveState(){
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("timetable",binding.timetable.createSaveData());
+        System.out.println("저장한단디야 -> "+binding.timetable.createSaveData());
+        editor.commit();
+    }
+    private void restoreState(){
+        SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        if ((preferences != null) && (preferences.contains("timetable"))) {
+            binding.timetable.load(preferences.getString("timetable",""));
+            System.out.println("꺼내온단디야 -> "+preferences.getString("timetable",""));
+        }
     }
 }
