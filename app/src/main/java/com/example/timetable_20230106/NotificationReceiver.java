@@ -40,13 +40,15 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         //안드로이드 오레오 버전 대응
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            manager.createNotificationChannel(
-                    new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT)
-            );
+            NotificationChannel nc =  new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+            nc.enableLights(true);
+            nc.enableVibration(true);
+            manager.createNotificationChannel(nc);
             builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         } else {
             builder = new NotificationCompat.Builder(context);
         }
+
 
         //알림창 제목
         builder.setContentTitle("유체크 알람"); //회의명노출
@@ -54,7 +56,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         //알림창 아이콘
         builder.setSmallIcon(com.google.android.material.R.drawable.notification_template_icon_bg);
         //알림창 터치시 자동 삭제
-        builder.setAutoCancel(true);
+        
 
         //푸시알림 빌드
         Notification notification = builder.build();

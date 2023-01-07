@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 NotificationReceiver nr = new NotificationReceiver();
                 Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
                 Time time = schedules.get(0).getStartTime();
-                intent.putExtra("weekday", schedules.get(0).getDay());
+                intent.putExtra("weekday", Calendar.DAY_OF_WEEK-2);
                 intent.putExtra("hour",time.getHour());
                 intent.putExtra("minute",time.getMinute());
                 intent.putExtra("title",schedules.get(0).getClassTitle());
