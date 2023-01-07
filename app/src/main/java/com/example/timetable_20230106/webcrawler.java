@@ -51,7 +51,7 @@ public class webcrawler {
                     public void onLoadResource(WebView view, String url) {
                         if (!isDataGet) {
                             try {
-                                sleep(500);
+                                sleep(600);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

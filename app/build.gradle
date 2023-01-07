@@ -36,6 +36,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
     implementation 'com.github.tlaabs:TimetableView:1.0.3-fx1'
+    implementation 'androidx.work:work-runtime:2.7.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'

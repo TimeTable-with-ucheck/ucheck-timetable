@@ -3,35 +3,62 @@ package com.example.timetable_20230106;
 import com.example.timetable_20230106.databinding.ActivityMainBinding;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
 import com.github.tlaabs.timetableview.Schedule;
+import com.github.tlaabs.timetableview.Time;
 import com.github.tlaabs.timetableview.TimetableView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     TimetableView Timetable;
     WebView webView;
     FloatingActionButton btn_addTimetable;
     Handler mHandler;
+
+    private AlarmManager alarmManager;
+    private int hour, minute;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+
         btn_addTimetable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,9 +69,16 @@ public class MainActivity extends Activity {
         Timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-                System.out.println(idx);
                 Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
-              }
+                NotificationReceiver nr = new NotificationReceiver();
+                Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
+                Time time = schedules.get(0).getStartTime();
+                intent.putExtra("weekday", schedules.get(0).getDay());
+                intent.putExtra("hour",time.getHour());
+                intent.putExtra("minute",time.getMinute());
+                intent.putExtra("title",schedules.get(0).getClassTitle());
+                nr.onReceive(MainActivity.this,intent);
+               }
         });
     }
 
@@ -101,6 +135,7 @@ public class MainActivity extends Activity {
         Timetable = findViewById(R.id.timetable);
         webView = binding.webView;
         btn_addTimetable = binding.btnAddTimetable;
+        alarmManager= (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
     }
 
     @Override
@@ -140,16 +175,18 @@ public class MainActivity extends Activity {
     private ArrayList<ArrayList<Schedule>> convertScheduleList(ArrayList<Schedule> schedules){
         ArrayList<ArrayList<Schedule>> scheduless = new ArrayList<ArrayList<Schedule>>();
         for(Schedule schedule : schedules){
-           int i = getIdx(scheduless,schedule);
-           if(i!=-1) scheduless.get(i).add(schedule);
-           else {
+            regist(schedule);
+            int i = getIdx(scheduless,schedule);
+            if(i!=-1) scheduless.get(i).add(schedule);
+            else {
                ArrayList<Schedule> temp = new ArrayList<Schedule>();
                temp.add(schedule);
                scheduless.add(temp);
-           }
+            }
         }
         return scheduless;
     }
+
     private int getIdx(ArrayList<ArrayList<Schedule>> list,Schedule schedule){
         int i = 0;
         for (ArrayList<Schedule> schedules : list){
@@ -158,4 +195,38 @@ public class MainActivity extends Activity {
         }
         return -1;
     }
+    public void regist(Schedule schedule) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Time time = schedule.getStartTime();
+            hour=time.getHour();
+            minute=time.getMinute()-10;
+        }else{
+            Toast.makeText(this, "버전을 확인해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("weekday", schedule.getDay());
+        intent.putExtra("hour",hour);
+        intent.putExtra("minute",minute);
+        intent.putExtra("title",schedule.getClassTitle());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_IMMUTABLE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        System.out.println("알람 설정:-> "+schedule.getClassTitle()+"설정 시간: "+calendar.getTimeInMillis()+" 설정 요일"+(schedule.getDay()+2));
+        System.out.println("알람 설정:-> 현제 시간"+System.currentTimeMillis()+" 지금 날짜: "+calendar.DAY_OF_WEEK);
+        long intervalDay = 24 * 60 * 60 * 1000;// 24시간
+        long selectTime=calendar.getTimeInMillis();
+        long currenTime=System.currentTimeMillis();
+        if(currenTime>selectTime){
+            selectTime += intervalDay;
+        }
+        // 10초 뒤에 시작해서 매일 같은 시간에 반복하기
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, selectTime, intervalDay, pendingIntent);
+
+    }// regist()..
+
+
 }
