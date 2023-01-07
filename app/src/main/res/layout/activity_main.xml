@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <WebView
         android:id="@+id/webView"
         android:layout_width="409dp"
-        android:layout_height="1dp"
+        android:layout_height="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/white"
         app:header_highlight_type="color"
+        app:header_highlight_color="@color/white"
         app:row_count="15"
         app:cell_height="70dp"
         app:sticker_colors="@array/default_sticker_color"

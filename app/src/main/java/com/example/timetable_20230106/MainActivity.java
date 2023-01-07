@@ -4,6 +4,7 @@ import com.example.timetable_20230106.databinding.ActivityMainBinding;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,7 +43,8 @@ public class MainActivity extends Activity {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
                 System.out.println(idx);
-            }
+                Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
+              }
         });
     }
 
@@ -56,21 +58,27 @@ public class MainActivity extends Activity {
         ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                System.out.println("클릭!");
                 String result = et.getText().toString();
+                ProgressDialog Loading = new ProgressDialog(MainActivity.this);
+                Loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                Loading.setMessage("시간표 불러오는중");
+                Loading.show();
                 mHandler = new Handler(){
                     @Override
                     public void handleMessage(Message msg){
-                        System.out.println("get! 드디어!");
                         super.handleMessage(msg);
-                        Timetable.removeAll();
-                        ArrayList<ArrayList<Schedule>> Scheduless = convertScheduleList( (ArrayList<Schedule>)msg.obj);
-                        for(ArrayList<Schedule> schedules : Scheduless){
-                            Timetable.add(schedules);
-                        }
-                        Toast.makeText(MainActivity.this,"loaded!",Toast.LENGTH_SHORT).show();
-                        saveState();
-
+                       if(((ArrayList<Schedule>)msg.obj).size()>0) {
+                           ArrayList<ArrayList<Schedule>> Scheduless = convertScheduleList((ArrayList<Schedule>)msg.obj);
+                           Timetable.removeAll();
+                           for (ArrayList<Schedule> schedules : Scheduless) {
+                               Timetable.add(schedules);
+                           }
+                           Toast.makeText(MainActivity.this, "성공!", Toast.LENGTH_SHORT).show();
+                           saveState();
+                       }else {
+                           Toast.makeText(MainActivity.this, "불러오기 실패", Toast.LENGTH_SHORT).show();
+                       }
+                        Loading.dismiss();
                     }
                 };
                 webcrawler wc = new webcrawler(result,webView,mHandler);
@@ -104,8 +112,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause(){
         super.onPause();
-       // saveState();
-        resetState();
+        saveState();
+       // resetState();
     }
     private void saveState(){
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);

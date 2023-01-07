@@ -23,8 +23,11 @@ public class webcrawler {
     private WebView webView;
     private boolean isInit;
     private boolean isDataGet;
+    private boolean isSendData;
+    private boolean isFinished;
     private  Handler mHandler;
     private ArrayList<Schedule> schedules;
+    private int counter;
 
 
     public webcrawler(String url, WebView webView, Handler mHandler ){
@@ -32,12 +35,11 @@ public class webcrawler {
         this.webView = webView;
         this.isInit =false;
         this.isDataGet = false;
+        this.isSendData = false;
         this.schedules= new ArrayList<>();
         this.mHandler = mHandler;
-    }
-    public ArrayList<Schedule> getSchedules(){
-        if (schedules.size() < 1) return null;
-        else return schedules;
+        this.counter = 0;
+        this.isFinished = false;
     }
 
     public void init(){
@@ -54,6 +56,25 @@ public class webcrawler {
                                 e.printStackTrace();
                             }
                             view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
+                            System.out.println("counter -> "+counter);
+
+                            }
+                        if(isDataGet&& !isSendData){
+                            System.out.println("out");
+                            Message message =  Message.obtain();
+                            message.obj = schedules;
+                            mHandler.sendMessage(message);
+                            isSendData = true;
+                        }
+                        counter++;
+                    }
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        if(!isSendData){
+                            Message message =  Message.obtain();
+                            message.obj = schedules;
+                            mHandler.sendMessage(message);
+                            isSendData = true;
                         }
                     }
                 });
@@ -92,9 +113,6 @@ public class webcrawler {
                             schedules.add(schedule);
                        }
                     }
-                    Message message =  Message.obtain();
-                    message.obj = schedules;
-                    mHandler.sendMessage(message);
                 }
             }
         }
