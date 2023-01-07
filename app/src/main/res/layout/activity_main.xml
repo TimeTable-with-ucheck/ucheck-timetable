@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        app:header_highlight_type="color"
         app:row_count="15"
         app:cell_height="70dp"
         app:sticker_colors="@array/default_sticker_color"

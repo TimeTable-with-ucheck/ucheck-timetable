@@ -85,7 +85,6 @@ public class webcrawler {
                 if(td.size()>1){
                     isDataGet = true;
                     for (int i = 0; i < td.size()-2; i++) {
-                        System.out.println(getDay(i) + " ->");
                         Element cols = td.get(i);
                         for(Element e : cols.select("div div")){
                            Schedule schedule= addSchedule(e,i);
@@ -101,7 +100,6 @@ public class webcrawler {
         }
         private Schedule addSchedule(Element elements, int day){
             if(elements.text().length()>1) {
-                printTest(elements,day);
                 Schedule schedule = new Schedule();
                 schedule.setClassTitle(elements.select("h3").text());
                 schedule.setClassPlace(elements.select("p span").text()); // sets place
