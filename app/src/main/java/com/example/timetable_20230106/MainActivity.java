@@ -81,13 +81,6 @@ public class MainActivity extends AppCompatActivity {
         Timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-//유체크 있으면 유체크 실행
-                if(getPackageList()) {
-                    startActivity(intent2);
-                } else {
-                    //없을시 없다고 토스트 메시지 출력
-                    Toast.makeText(MainActivity.this, "유체크 어플이 없습니다.", Toast.LENGTH_SHORT).show();
-                }
 
 
                 Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
@@ -99,11 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("minute",time.getMinute());
                 intent.putExtra("title",schedules.get(0).getClassTitle());
                 nr.onReceive(MainActivity.this,intent);
-
-
-
-
-
                }
         });
     }
