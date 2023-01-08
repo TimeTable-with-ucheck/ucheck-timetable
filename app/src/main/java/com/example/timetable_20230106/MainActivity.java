@@ -112,20 +112,17 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean getPackageList() {
         boolean isExist = false;
-        PackageManager pkgMgr = getPackageManager();
-        List<ResolveInfo> mApps;
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> appList;
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        mApps = pkgMgr.queryIntentActivities(mainIntent, 0);
-
+        appList = packageManager.queryIntentActivities(mainIntent, 0);
         try {
-            for (int i = 0; i < mApps.size(); i++) {
-                if(mApps.get(i).activityInfo.packageName.startsWith(packageName)){
+            for (int i = 0; i < appList.size(); i++) {
+                if(appList.get(i).activityInfo.packageName.startsWith(packageName)){
                     isExist = true;
                     break;
                 }
-
-
             }
         }
         catch (Exception e) {
