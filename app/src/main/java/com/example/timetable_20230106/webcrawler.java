@@ -126,10 +126,10 @@ public class webcrawler {
                 String style = elements.select("div").attr("style");
                 int time = onlyInt(style.split(";")[1]) / 60;
                 int min = onlyInt(style.split(";")[1]) % 60;
-                int timeLong = (onlyInt(style.split(";")[1]) + onlyInt(style.split(";")[0])) / 60;
-                int minLong = (onlyInt(style.split(";")[1]) + onlyInt(style.split(";")[0])) % 60 - 1;
+                int timeEnd = (onlyInt(style.split(";")[1]) + onlyInt(style.split(";")[0])) / 60;
+                int minEnd = (onlyInt(style.split(";")[1]) + onlyInt(style.split(";")[0])) % 60 - 1;
                 schedule.setStartTime(new Time(time, min)); // sets the beginning of class time (hour,minute)
-                schedule.setEndTime(new Time(timeLong, minLong)); // sets the end of class time (hour,minute)
+                schedule.setEndTime(new Time(timeEnd, minEnd)); // sets the end of class time (hour,minute)
                 return schedule;
             }
            return null;
