@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.timetable_20230106">
+
+    <queries>
+        <package android:name="com.libeka.attendance.ucheckplusstud" />
+    </queries>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Timetable_20230106"
         tools:targetApi="31">
+
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

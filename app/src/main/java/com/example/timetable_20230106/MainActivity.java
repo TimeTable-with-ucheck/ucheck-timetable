@@ -9,10 +9,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ContentProvider;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +23,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,6 +44,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton btn_addTimetable;
     Handler mHandler;
+    private static final String packageName = "com.libeka.attendance.ucheckplusstud";
+
 
     private AlarmManager alarmManager;
     private int hour, minute;
@@ -56,8 +63,13 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         init();
+
+        Intent intent2 = this.getPackageManager().getLaunchIntentForPackage(packageName);
+
 
         btn_addTimetable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
         Timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
+//유체크 있으면 유체크 실행
+                if(getPackageList()) {
+                    startActivity(intent2);
+                } else {
+                    //없을시 없다고 토스트 메시지 출력
+                    Toast.makeText(MainActivity.this, "유체크 어플이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+
+
                 Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
                 NotificationReceiver nr = new NotificationReceiver();
                 Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
@@ -78,9 +99,42 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("minute",time.getMinute());
                 intent.putExtra("title",schedules.get(0).getClassTitle());
                 nr.onReceive(MainActivity.this,intent);
+
+
+
+
+
                }
         });
     }
+
+    //ucheck 어플이 깔려있는지 확인하는 메소드
+
+    public boolean getPackageList() {
+        boolean isExist = false;
+        PackageManager pkgMgr = getPackageManager();
+        List<ResolveInfo> mApps;
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        mApps = pkgMgr.queryIntentActivities(mainIntent, 0);
+
+        try {
+            for (int i = 0; i < mApps.size(); i++) {
+                if(mApps.get(i).activityInfo.packageName.startsWith(packageName)){
+                    isExist = true;
+                    break;
+                }
+
+
+            }
+        }
+        catch (Exception e) {
+            isExist = false;
+        }
+        return isExist;
+    }
+
+
 
     private AlertDialog.Builder urlPopUp(){
         AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
