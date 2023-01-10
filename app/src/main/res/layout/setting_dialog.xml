@@ -7,7 +7,7 @@
         android:id="@+id/switch_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:switchMinWidth="100dp"
+        android:switchMinWidth="50dp"
         android:switchPadding="20dp"
         android:text="  알림" />
 

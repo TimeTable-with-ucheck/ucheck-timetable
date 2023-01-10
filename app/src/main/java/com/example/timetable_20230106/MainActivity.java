@@ -66,13 +66,8 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         init();
-
-        Intent intent2 = this.getPackageManager().getLaunchIntentForPackage(packageName);
-
 
         btn_addTimetable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
               //  createNotification(schedules);
                 SettingDialog settingDialog = new SettingDialog(MainActivity.this);
-                settingDialog.showMenu();
+                settingDialog.showMenu(findAlarmData(schedules));
 //                if(findAlarmData(schedules).getIsOn()){
 //                    alarmOff(schedules);
 //                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 끔", Toast.LENGTH_SHORT).show();
@@ -96,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
 //                }
                }
 
+            /**
+             * 알람 강제 발생 메소드
+             * @param schedules
+             */
             private void createNotification(ArrayList<Schedule> schedules) {
                 NotificationReceiver nr = new NotificationReceiver();
                 Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
@@ -110,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * url 입력창
+     * @return
+     */
     private AlertDialog.Builder urlPopUp(){
         AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
         ad.setIcon(R.mipmap.ic_launcher);
@@ -159,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
         return ad;
     }
 
+    /**
+     * onCreate생성시 선언할 것들
+     */
     private void init() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -174,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         restoreState();
     }
-
     @Override
     protected void onPause(){
         super.onPause();
@@ -182,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
        // resetState();
     }
     private void saveState(){
-
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("timetable",Timetable.createSaveData());
@@ -212,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    //테스트용
     private void resetState(){
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -238,6 +242,11 @@ public class MainActivity extends AppCompatActivity {
         return scheduless;
     }
 
+    /**
+     * 제목이 같은 알람은 하나의 알람 데이터로 생성,
+     * 전역적으로 선언되어 있는 알람 데이터 리스트에 저장한다.
+     * @param scheduless
+     */
     private void createAlarmData(ArrayList<ArrayList<Schedule>> scheduless){
         alarmDataList = new ArrayList<>();
         for(ArrayList<Schedule> schedules : scheduless) {
@@ -261,6 +270,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return -1;
     }
+
+    /**
+     * 알람 메니저에 알람 등록
+     * @param alarmData
+     */
     public void regist(AlarmData alarmData) {
         long intervalDay = 24 * 60 * 60 * 1000;// 24시간
         int size = alarmData.getSize();
@@ -285,7 +299,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }// regist()..
+    }
+
+    /**
+     * 알람 메니저에서 등록된 알람 제거
+     * @param alarmData
+     */
     public void unRegist(AlarmData alarmData) {
         Intent[] intents = alarmData.getIntent();
         int[] id = alarmData.getId();
@@ -299,16 +318,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * 알람 on
+     * @param schedules
+     */
     public void alarmOn(ArrayList<Schedule> schedules){
         AlarmData alarmData = findAlarmData(schedules);
         alarmData.setIsOn(true);
         regist(alarmData);
     }
+
+    /**
+     * 알람 off
+     * @param schedules
+     */
     public void alarmOff(ArrayList<Schedule> schedules){
         AlarmData alarmData = findAlarmData(schedules);
         alarmData.setIsOn(false);
         unRegist(alarmData);
     }
+
+    /**
+     * 저장된 알람, 등록된 알람 모두 삭제
+     */
     public void clearAlarm(){
         if(alarmDataList !=null &&this.alarmDataList.size()>0) {
             for (AlarmData alarmData : this.alarmDataList) {
