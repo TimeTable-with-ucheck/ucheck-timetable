@@ -73,6 +73,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         //NotificationManager를 이용하여 푸시 알림 보내기
         manager.notify(1,notification);
     }
+
+
     //ucheck 어플이 깔려있는지 확인하는 메소드
 
     public boolean getPackageList(Context context) {

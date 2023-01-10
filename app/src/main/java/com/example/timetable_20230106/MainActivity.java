@@ -25,6 +25,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -57,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
 
 
+
+
     private AlarmManager alarmManager;
     private int hour, minute;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        this.setTitle("TimeTable For uCheck");
 
         super.onCreate(savedInstanceState);
 
@@ -81,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         Timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
+
+                SettingDialog settingDialog = new SettingDialog(MainActivity.this);
+                settingDialog.showMenu();
 
 
                 Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
