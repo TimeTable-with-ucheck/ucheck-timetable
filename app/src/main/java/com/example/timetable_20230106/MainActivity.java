@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
               //  createNotification(schedules);
                 SettingDialog settingDialog = new SettingDialog(MainActivity.this);
                 settingDialog.showMenu(findAlarmData(schedules));
+
+
 //                if(findAlarmData(schedules).getIsOn()){
 //                    alarmOff(schedules);
 //                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 끔", Toast.LENGTH_SHORT).show();

@@ -35,16 +35,7 @@ public class SettingDialog {
                     alarmData.setIsOn(b);
             }
         });
-        dialog.setPositiveButton("input" ,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(context," 알람"+string, Toast.LENGTH_SHORT).show();
-
-                    }
-
-                });
-
+        dialog.setPositiveButton("ok" ,null);
         dialog.show();
     }
 
