@@ -10,6 +10,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.tlaabs.timetableview.Schedule;
+
+import java.util.ArrayList;
+
 public class SettingDialog {
 
     View setting_dialog;
@@ -22,8 +26,9 @@ public class SettingDialog {
         this.context = context;
     }
 
-    public void showMenu(AlarmData alarmData) {
+    public void showMenu(ArrayList<Schedule> schedules, AlarmService alarmService) {
         AlertDialog.Builder dialog = new AlertDialog.Builder( this.context );
+        AlarmData alarmData = alarmService.findAlarmData(schedules);
         dialog.setTitle(alarmData.getClassTitle());
         setting_dialog = (View) View.inflate( this.context , R.layout.setting_dialog, null);
         dialog.setView(setting_dialog);
@@ -35,7 +40,12 @@ public class SettingDialog {
                     alarmData.setIsOn(b);
             }
         });
-        dialog.setPositiveButton("ok" ,null);
+        dialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alarmService.patchAlarm(alarmData);
+            }
+        });
         dialog.show();
     }
 

@@ -5,17 +5,12 @@ import com.example.timetable_20230106.databinding.ActivityMainBinding;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ContentProvider;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,11 +52,8 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton btn_addTimetable;
     Handler mHandler;
     Gson gson;
+    AlarmService alarmService;
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
-    private ArrayList<AlarmData> alarmDataList = null;
-
-
-    private AlarmManager alarmManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -81,9 +73,7 @@ public class MainActivity extends AppCompatActivity {
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
               //  createNotification(schedules);
                 SettingDialog settingDialog = new SettingDialog(MainActivity.this);
-                settingDialog.showMenu(findAlarmData(schedules));
-
-
+                settingDialog.showMenu(schedules,alarmService);
 //                if(findAlarmData(schedules).getIsOn()){
 //                    alarmOff(schedules);
 //                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 끔", Toast.LENGTH_SHORT).show();
@@ -172,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         Timetable = findViewById(R.id.timetable);
         webView = binding.webView;
         btn_addTimetable = binding.btnAddTimetable;
-        alarmManager= (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmService = new AlarmService(this);
         gson = new Gson();
     }
 
@@ -191,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("timetable",Timetable.createSaveData());
-        editor.putString("alarmDataList",  gson.toJson(alarmDataList));
+        editor.putString("alarmDataList",  gson.toJson(alarmService.getAlarmDataList()));
         System.out.println("Timetable-save -> "+Timetable.createSaveData());
-        System.out.println("dataList-save -> "+gson.toJson(alarmDataList));
+        System.out.println("dataList-save -> "+gson.toJson(alarmService.getAlarmDataList()));
         editor.commit();
     }
     private void restoreState(){
@@ -202,19 +192,14 @@ public class MainActivity extends AppCompatActivity {
             Timetable.load(preferences.getString("timetable",""));
             String alarmDataListString = preferences.getString("alarmDataList",null);
             if(alarmDataListString!= null) {
-                alarmDataList = new ArrayList<>();
-                alarmDataList = gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
-                }.getType());
+
+                alarmService.setAlarmDataList(gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
+                }.getType()));
             }else{
                 System.out.println("list is null");
             }
             System.out.println("Timetable- -> "+preferences.getString("timetable",""));
             System.out.println("dataList-save -> "+alarmDataListString);
-            if(alarmDataList != null) {
-                for (AlarmData alarmData : alarmDataList) {
-                    System.out.println(alarmData.GetString());
-                }
-            }
         }
     }
     //테스트용
@@ -237,31 +222,9 @@ public class MainActivity extends AppCompatActivity {
                scheduless.add(temp);
             }
         }
-        if(alarmDataList != null){
-            clearAlarm();
-        }
-        createAlarmData(scheduless);
+        alarmService.clearAlarm();
+        alarmService.createAlarmData(scheduless);
         return scheduless;
-    }
-
-    /**
-     * 제목이 같은 알람은 하나의 알람 데이터로 생성,
-     * 전역적으로 선언되어 있는 알람 데이터 리스트에 저장한다.
-     * @param scheduless
-     */
-    private void createAlarmData(ArrayList<ArrayList<Schedule>> scheduless){
-        alarmDataList = new ArrayList<>();
-        for(ArrayList<Schedule> schedules : scheduless) {
-            AlarmData temp = new AlarmData(schedules, this);
-            alarmDataList.add(temp);
-            regist(temp);
-        }
-    }
-    private AlarmData findAlarmData(ArrayList<Schedule> schedules){
-        for(AlarmData alarmData : alarmDataList){
-            if(alarmData.isTitleEqual(schedules.get(0).getClassTitle()))return alarmData;
-        }
-        return null;
     }
 
     private int getIdx(ArrayList<ArrayList<Schedule>> list,Schedule schedule){
@@ -272,89 +235,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return -1;
     }
-
-    /**
-     * 알람 메니저에 알람 등록
-     * @param alarmData
-     */
-    public void regist(AlarmData alarmData) {
-        long intervalDay = 24 * 60 * 60 * 1000;// 24시간
-        int size = alarmData.getSize();
-        int[] id = alarmData.getId();
-        Intent[] intent = alarmData.getIntent();
-        Time[] selectTimes = alarmData.getTime();
-        for(int i = 0; i<size;i++) {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id[i],  intent[i], PendingIntent.FLAG_IMMUTABLE);
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
-            calendar.set(Calendar.MINUTE, selectTimes[i].getMinute());
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            System.out.println("알람 설정:-> " + alarmData.getClassTitle() + "설정 시간: " + calendar.getTimeInMillis() + " 설정 요일" + (alarmData.getDay()[i] + 2));
-            long selectTime = calendar.getTimeInMillis();
-            long currentTime = System.currentTimeMillis();
-            if (currentTime > selectTime) {
-                selectTime += intervalDay;
-            }
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY,pendingIntent);
-            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]);
-        }
-
-
-    }
-
-    /**
-     * 알람 메니저에서 등록된 알람 제거
-     * @param alarmData
-     */
-    public void unRegist(AlarmData alarmData) {
-        Intent[] intents = alarmData.getIntent();
-        int[] id = alarmData.getId();
-        for(int i = 0; i<alarmData.getSize(); i++) {
-            try {
-                System.out.println("unregist: title:"+alarmData.getClassTitle()+" id: "+id[i]);
-                PendingIntent temp = PendingIntent.getBroadcast(this,id[i], intents[i],PendingIntent.FLAG_IMMUTABLE);
-                alarmManager.cancel(temp);
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 알람 on
-     * @param schedules
-     */
-    public void alarmOn(ArrayList<Schedule> schedules){
-        AlarmData alarmData = findAlarmData(schedules);
-        alarmData.setIsOn(true);
-        regist(alarmData);
-    }
-
-    /**
-     * 알람 off
-     * @param schedules
-     */
-    public void alarmOff(ArrayList<Schedule> schedules){
-        AlarmData alarmData = findAlarmData(schedules);
-        alarmData.setIsOn(false);
-        unRegist(alarmData);
-    }
-
-    /**
-     * 저장된 알람, 등록된 알람 모두 삭제
-     */
-    public void clearAlarm(){
-        if(alarmDataList !=null &&this.alarmDataList.size()>0) {
-            for (AlarmData alarmData : this.alarmDataList) {
-                unRegist(alarmData);
-                alarmDataList = null;
-            }
-        }
-    }
-
-
-
-
-
 }
