@@ -51,7 +51,7 @@ public class webcrawler {
                     public void onLoadResource(WebView view, String url) {
                         if (!isDataGet) {
                             try {
-                                sleep(600);
+                                sleep(700);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -59,23 +59,14 @@ public class webcrawler {
                             System.out.println("counter -> "+counter);
 
                             }
-                        if(isDataGet&& !isSendData){
-                            System.out.println("out");
-                            Message message =  Message.obtain();
-                            message.obj = schedules;
-                            mHandler.sendMessage(message);
-                            isSendData = true;
-                        }
                         counter++;
                     }
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        if(!isSendData){
-                            Message message =  Message.obtain();
-                            message.obj = schedules;
-                            mHandler.sendMessage(message);
-                            isSendData = true;
-                        }
+                        Message message =  Message.obtain();
+                        message.obj = schedules;
+                        mHandler.sendMessage(message);
+                        isSendData = true;
                     }
                 });
         isInit = true;
@@ -103,15 +94,15 @@ public class webcrawler {
                 Document doc = Jsoup.parse(html);
                 Elements timetable = doc.getElementsByClass("tablebody");
                 Elements td = timetable.select("td");
-                if(td.size()>1){
+                if (td.size() > 2) {
                     isDataGet = true;
-                    for (int i = 0; i < td.size()-2; i++) {
+                    for (int i = 0; i < td.size() - 2; i++) {
                         Element cols = td.get(i);
-                        for(Element e : cols.select("div div")){
-                           Schedule schedule= addSchedule(e,i);
-                           if(schedule != null)
-                            schedules.add(schedule);
-                       }
+                        for (Element e : cols.select("div div")) {
+                            Schedule schedule = addSchedule(e, i);
+                            if (schedule != null)
+                                schedules.add(schedule);
+                        }
                     }
                 }
             }

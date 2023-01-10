@@ -25,7 +25,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -36,6 +35,8 @@ import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
 import com.github.tlaabs.timetableview.TimetableView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,19 +56,16 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton btn_addTimetable;
     Handler mHandler;
+    Gson gson;
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
-
-
+    private ArrayList<AlarmData> alarmDataList = null;
 
 
     private AlarmManager alarmManager;
-    private int hour, minute;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        this.setTitle("TimeTable For uCheck");
 
         super.onCreate(savedInstanceState);
 
@@ -86,45 +84,29 @@ public class MainActivity extends AppCompatActivity {
         Timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-
+              //  createNotification(schedules);
                 SettingDialog settingDialog = new SettingDialog(MainActivity.this);
                 settingDialog.showMenu();
+//                if(findAlarmData(schedules).getIsOn()){
+//                    alarmOff(schedules);
+//                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 끔", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    alarmOn(schedules);
+//                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 킴", Toast.LENGTH_SHORT).show();
+//                }
+               }
 
-
-                Toast.makeText(MainActivity.this, schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
+            private void createNotification(ArrayList<Schedule> schedules) {
                 NotificationReceiver nr = new NotificationReceiver();
                 Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
                 Time time = schedules.get(0).getStartTime();
                 intent.putExtra("weekday", Calendar.DAY_OF_WEEK-2);
                 intent.putExtra("hour",time.getHour());
                 intent.putExtra("minute",time.getMinute());
-                intent.putExtra("title",schedules.get(0).getClassTitle());
+                intent.putExtra("title", schedules.get(0).getClassTitle());
                 nr.onReceive(MainActivity.this,intent);
-               }
-        });
-    }
-
-    //ucheck 어플이 깔려있는지 확인하는 메소드
-
-    public boolean getPackageList() {
-        boolean isExist = false;
-        PackageManager packageManager = getPackageManager();
-        List<ResolveInfo> appList;
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        appList = packageManager.queryIntentActivities(mainIntent, 0);
-        try {
-            for (int i = 0; i < appList.size(); i++) {
-                if(appList.get(i).activityInfo.packageName.startsWith(packageName)){
-                    isExist = true;
-                    break;
-                }
             }
-        }
-        catch (Exception e) {
-            isExist = false;
-        }
-        return isExist;
+        });
     }
 
 
@@ -148,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void handleMessage(Message msg){
                         super.handleMessage(msg);
+                        System.out.println(((ArrayList<Schedule>)msg.obj));
                        if(((ArrayList<Schedule>)msg.obj).size()>0) {
                            ArrayList<ArrayList<Schedule>> Scheduless = convertScheduleList((ArrayList<Schedule>)msg.obj);
                            Timetable.removeAll();
@@ -183,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         webView = binding.webView;
         btn_addTimetable = binding.btnAddTimetable;
         alarmManager= (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        gson = new Gson();
     }
 
     @Override
@@ -198,17 +182,34 @@ public class MainActivity extends AppCompatActivity {
        // resetState();
     }
     private void saveState(){
+
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("timetable",Timetable.createSaveData());
-        System.out.println("저장한단디야 -> "+Timetable.createSaveData());
+        editor.putString("alarmDataList",  gson.toJson(alarmDataList));
+        System.out.println("Timetable-save -> "+Timetable.createSaveData());
+        System.out.println("dataList-save -> "+gson.toJson(alarmDataList));
         editor.commit();
     }
     private void restoreState(){
         SharedPreferences preferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         if ((preferences != null) && (preferences.contains("timetable"))) {
             Timetable.load(preferences.getString("timetable",""));
-            System.out.println("꺼내온단디야 -> "+preferences.getString("timetable",""));
+            String alarmDataListString = preferences.getString("alarmDataList",null);
+            if(alarmDataListString!= null) {
+                alarmDataList = new ArrayList<>();
+                alarmDataList = gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
+                }.getType());
+            }else{
+                System.out.println("list is null");
+            }
+            System.out.println("Timetable- -> "+preferences.getString("timetable",""));
+            System.out.println("dataList-save -> "+alarmDataListString);
+            if(alarmDataList != null) {
+                for (AlarmData alarmData : alarmDataList) {
+                    System.out.println(alarmData.GetString());
+                }
+            }
         }
     }
     private void resetState(){
@@ -222,7 +223,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ArrayList<Schedule>> convertScheduleList(ArrayList<Schedule> schedules){
         ArrayList<ArrayList<Schedule>> scheduless = new ArrayList<ArrayList<Schedule>>();
         for(Schedule schedule : schedules){
-            regist(schedule);
             int i = getIdx(scheduless,schedule);
             if(i!=-1) scheduless.get(i).add(schedule);
             else {
@@ -231,7 +231,26 @@ public class MainActivity extends AppCompatActivity {
                scheduless.add(temp);
             }
         }
+        if(alarmDataList != null){
+            clearAlarm();
+        }
+        createAlarmData(scheduless);
         return scheduless;
+    }
+
+    private void createAlarmData(ArrayList<ArrayList<Schedule>> scheduless){
+        alarmDataList = new ArrayList<>();
+        for(ArrayList<Schedule> schedules : scheduless) {
+            AlarmData temp = new AlarmData(schedules, this);
+            alarmDataList.add(temp);
+            regist(temp);
+        }
+    }
+    private AlarmData findAlarmData(ArrayList<Schedule> schedules){
+        for(AlarmData alarmData : alarmDataList){
+            if(alarmData.isTitleEqual(schedules.get(0).getClassTitle()))return alarmData;
+        }
+        return null;
     }
 
     private int getIdx(ArrayList<ArrayList<Schedule>> list,Schedule schedule){
@@ -242,38 +261,65 @@ public class MainActivity extends AppCompatActivity {
         }
         return -1;
     }
-    public void regist(Schedule schedule) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Time time = schedule.getStartTime();
-            hour=time.getHour();
-            minute=time.getMinute()-10;
-        }else{
-            Toast.makeText(this, "버전을 확인해 주세요.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        intent.putExtra("weekday", schedule.getDay());
-        intent.putExtra("hour",hour);
-        intent.putExtra("minute",minute);
-        intent.putExtra("title",schedule.getClassTitle());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_IMMUTABLE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        System.out.println("알람 설정:-> "+schedule.getClassTitle()+"설정 시간: "+calendar.getTimeInMillis()+" 설정 요일"+(schedule.getDay()+2));
-        System.out.println("알람 설정:-> 현제 시간"+System.currentTimeMillis()+" 지금 날짜: "+calendar.DAY_OF_WEEK);
+    public void regist(AlarmData alarmData) {
         long intervalDay = 24 * 60 * 60 * 1000;// 24시간
-        long selectTime=calendar.getTimeInMillis();
-        long currenTime=System.currentTimeMillis();
-        if(currenTime>selectTime){
-            selectTime += intervalDay;
+        int size = alarmData.getSize();
+        int[] id = alarmData.getId();
+        Intent[] intent = alarmData.getIntent();
+        Time[] selectTimes = alarmData.getTime();
+        for(int i = 0; i<size;i++) {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id[i],  intent[i], PendingIntent.FLAG_IMMUTABLE);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
+            calendar.set(Calendar.MINUTE, selectTimes[i].getMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            System.out.println("알람 설정:-> " + alarmData.getClassTitle() + "설정 시간: " + calendar.getTimeInMillis() + " 설정 요일" + (alarmData.getDay()[i] + 2));
+            long selectTime = calendar.getTimeInMillis();
+            long currentTime = System.currentTimeMillis();
+            if (currentTime > selectTime) {
+                selectTime += intervalDay;
+            }
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY,pendingIntent);
+            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]);
         }
-        // 10초 뒤에 시작해서 매일 같은 시간에 반복하기
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, selectTime, intervalDay, pendingIntent);
+
 
     }// regist()..
+    public void unRegist(AlarmData alarmData) {
+        Intent[] intents = alarmData.getIntent();
+        int[] id = alarmData.getId();
+        for(int i = 0; i<alarmData.getSize(); i++) {
+            try {
+                System.out.println("unregist: title:"+alarmData.getClassTitle()+" id: "+id[i]);
+                PendingIntent temp = PendingIntent.getBroadcast(this,id[i], intents[i],PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.cancel(temp);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    public void alarmOn(ArrayList<Schedule> schedules){
+        AlarmData alarmData = findAlarmData(schedules);
+        alarmData.setIsOn(true);
+        regist(alarmData);
+    }
+    public void alarmOff(ArrayList<Schedule> schedules){
+        AlarmData alarmData = findAlarmData(schedules);
+        alarmData.setIsOn(false);
+        unRegist(alarmData);
+    }
+    public void clearAlarm(){
+        if(alarmDataList !=null &&this.alarmDataList.size()>0) {
+            for (AlarmData alarmData : this.alarmDataList) {
+                unRegist(alarmData);
+                alarmDataList = null;
+            }
+        }
+    }
+
+
+
 
 
 }

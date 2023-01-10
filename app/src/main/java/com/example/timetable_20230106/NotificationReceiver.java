@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -54,8 +55,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         } else {
             builder = new NotificationCompat.Builder(context);
         }
-
-        intent2 = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if(getPackageList(context)){
+            intent2 = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        }else{
+            intent2 = new Intent(Intent.ACTION_VIEW);
+            intent2.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent2.setData(Uri.parse("market://details?id="+packageName));
+        }
         PendingIntent ucheckIntent = PendingIntent.getActivity(context,0,intent2,PendingIntent.FLAG_IMMUTABLE);
         //알림창 제목
         builder.setContentTitle("유체크 알람"); //회의명노출
@@ -63,18 +69,14 @@ public class NotificationReceiver extends BroadcastReceiver {
         //알림창 아이콘
         builder.setSmallIcon(com.google.android.material.R.drawable.notification_template_icon_bg);
         //알림창 터치시 자동 삭제
+        builder.setAutoCancel(true);
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         builder.setContentIntent(ucheckIntent);
-        
-
         //푸시알림 빌드
         Notification notification = builder.build();
-
         //NotificationManager를 이용하여 푸시 알림 보내기
         manager.notify(1,notification);
     }
-
-
     //ucheck 어플이 깔려있는지 확인하는 메소드
 
     public boolean getPackageList(Context context) {
