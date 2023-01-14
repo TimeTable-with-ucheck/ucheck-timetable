@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     Handler mHandler;
     Gson gson;
     AlarmService alarmService;
+    ArrayList<Schedule> temp;
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             int i = getIdx(scheduless,schedule);
             if(i!=-1) scheduless.get(i).add(schedule);
             else {
-               ArrayList<Schedule> temp = new ArrayList<Schedule>();
+               this.temp = new ArrayList<Schedule>();
                temp.add(schedule);
                scheduless.add(temp);
             }
@@ -256,9 +257,11 @@ public class MainActivity extends AppCompatActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.btn_add_schedule:
-                Toast.makeText(this.getApplicationContext(), "일정을 추가하세요", Toast.LENGTH_SHORT).show();
-                return true;
 
+                AddSchedule addSchedule = new AddSchedule(MainActivity.this, this.temp);
+                addSchedule.addSchedule();
+//                this.temp.add();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

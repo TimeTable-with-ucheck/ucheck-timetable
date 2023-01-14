@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <item android:id="@+id/btn_add_schedule"
-            android:title="일정 추가"
+            android:title="직접 추가"
             app:showAsAction="always"
             />
 </menu>
