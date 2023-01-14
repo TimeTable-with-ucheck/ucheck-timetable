@@ -26,10 +26,12 @@
         app:header_highlight_type="color"
         app:header_highlight_color="@color/white"
         app:row_count="15"
+        app:column_count="8"
         app:cell_height="70dp"
         app:sticker_colors="@array/default_sticker_color"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintBaseline_toBottomOf="parent" />
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:header_title="@array/my_header_title"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_addTimetable"

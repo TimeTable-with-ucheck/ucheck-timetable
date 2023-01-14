@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                            Timetable.removeAll();
                            for (ArrayList<Schedule> schedules : Scheduless) {
                                Timetable.add(schedules);
+
                            }
                            Toast.makeText(MainActivity.this, "성공!", Toast.LENGTH_SHORT).show();
                            saveState();
