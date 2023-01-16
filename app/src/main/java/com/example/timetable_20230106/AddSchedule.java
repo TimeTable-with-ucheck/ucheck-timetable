@@ -55,54 +55,7 @@ public class AddSchedule {
             public void onClick(View view) {
                 Dialog listDialog = new Dialog(context);
                 listDialog.setContentView(R.layout.set_time_dialog);
-                list_time = listDialog.findViewById(R.id.list_time);
-
-
-                list = new ArrayList<String>();
-                list.add("09");
-                list.add("10");
-                list.add("11");
-                list.add("12");
-                list.add("13");
-                list.add("14");
-                list.add("15");
-                list.add("16");
-                list.add("17");
-                list.add("18");
-                list.add("19");
-                list.add("20");
-                list.add("21");
-                list.add("22");
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list);
-                list_time.setAdapter(adapter);
-
-
-                list_min = listDialog.findViewById(R.id.list_min);
-
-                list1 = new ArrayList<String>();
-                list1.add("00");
-                list1.add("05");
-                list1.add("10");
-                list1.add("15");
-                list1.add("20");
-                list1.add("25");
-                list1.add("30");
-                list1.add("35");
-                list1.add("40");
-                list1.add("45");
-                list1.add("50");
-                list1.add("55");
-                list1.add("60");
-                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list1);
-                list_min.setAdapter(adapter1);
-
-
-
-
-
-
-
+//                setTime(listDialog);
                 listDialog.show();
 
             }
@@ -135,6 +88,51 @@ public class AddSchedule {
             case "일": return 6;
             default: return 9;
         }
+    }
+
+    public void setTIme(Dialog listDialog) {
+        list_time = listDialog.findViewById(R.id.list_time);
+
+
+        list = new ArrayList<String>();
+        list.add("09");
+        list.add("10");
+        list.add("11");
+        list.add("12");
+        list.add("13");
+        list.add("14");
+        list.add("15");
+        list.add("16");
+        list.add("17");
+        list.add("18");
+        list.add("19");
+        list.add("20");
+        list.add("21");
+        list.add("22");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list);
+        list_time.setAdapter(adapter);
+
+
+        list_min = listDialog.findViewById(R.id.list_min);
+
+        list1 = new ArrayList<String>();
+        list1.add("00");
+        list1.add("05");
+        list1.add("10");
+        list1.add("15");
+        list1.add("20");
+        list1.add("25");
+        list1.add("30");
+        list1.add("35");
+        list1.add("40");
+        list1.add("45");
+        list1.add("50");
+        list1.add("55");
+        list1.add("60");
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list1);
+        list_min.setAdapter(adapter1);
+
     }
 
 }
