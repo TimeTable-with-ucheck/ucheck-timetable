@@ -61,7 +61,7 @@ public class AddSchedule {
             public void onClick(View view) {
                 Dialog listDialog = new Dialog(context);
                 setDay(listDialog);
-//                set_day.setText("           " + day +"요일");
+
                 day = "";
             }
         });
@@ -110,7 +110,7 @@ public class AddSchedule {
             default: return 9;
         }
     }
-    public String setDay(Dialog listDialog) {
+    public void setDay(Dialog listDialog) {            // 요일 눌렀을 때 실행되는 메소드
         listDialog.setContentView(R.layout.set_list_dialog);
         listDialog.show();
         list_day = listDialog.findViewById(R.id.list_time);
@@ -129,13 +129,13 @@ public class AddSchedule {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 day = list.get(i);
                 listDialog.dismiss();
-                set_day.setText("           " + day +"요일");
+                set_day.setText("           " + day +"요일");       // 요일 선택하면 해당 요일로 바뀜!!
                 day = "";
             }
         });
-        return day;
+
     }
-    public String setTime(Dialog listDialog, int numb) {
+    public void setTime(Dialog listDialog, int numb) {
         listDialog.setContentView(R.layout.set_list_dialog);
         listDialog.show();
         list_time = listDialog.findViewById(R.id.list_time);
@@ -188,7 +188,7 @@ public class AddSchedule {
                         time = time + " : " +list1.get(i).toString();
                         dialog.dismiss();
                         if(numb == 0) {
-                            set_startTime.setText(time);
+                            set_startTime.setText(time);     // setTime 메소드 파라미터로 0이 넘어오면 startTime을 , 아니면 endTime을 setText함
                             time = "";
                         } else {
                             set_endTime.setText(time);
@@ -198,6 +198,6 @@ public class AddSchedule {
                 });
             }
         });
-        return time;
+
     }
 }
