@@ -1,84 +1,125 @@
 package com.example.timetable_20230106;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.tlaabs.timetableview.Schedule;
-import com.github.tlaabs.timetableview.Time;
-
 import java.util.ArrayList;
+import java.util.List;
+
+
+//강의 직접 추가하는 기능
+
 
 public class AddSchedule {
 
     Context context;
-    ArrayList<Schedule> schedules;
+
     View add_schedule;
-    EditText set_name, set_professor, set_place, set_startTime, set_endTime, set_day;
-    int day;
+    EditText set_name, set_professor, set_place;
+
     Button btn_add;
-    Time startTime, endTime;
-    Schedule newSchedule;
+
+    TextView  set_day, set_startTime ,set_endTime;
+    ListView list_time, list_min;
+    int startHour, startMin, endHour, endMin;
+    List<String> list, list1;
 
 
 
 
-    public AddSchedule(Context context, ArrayList<Schedule> schedules){
+    public AddSchedule(Context context){
         this.context = context;
-        this.schedules = schedules;
+
     }
 
 
-    public void addSchedule() {
-        add_schedule = (View) View.inflate( this.context , R.layout.add_schedule, null);
-        AlertDialog.Builder dialog = new AlertDialog.Builder( this.context );
-        dialog.setView(add_schedule);
+    @SuppressLint("ResourceType")
+    public void addNewSchedule() {
+
+        Dialog dialog = new Dialog(this.context);
+
+        dialog.setContentView(R.layout.add_schedule_dialog);
         dialog.show();
 
-        set_name = add_schedule.findViewById(R.id.set_name);
-        set_professor = add_schedule.findViewById(R.id.set_professor);
-        set_place = add_schedule.findViewById(R.id.set_place);
-        set_day = add_schedule.findViewById(R.id.set_day);
-        set_startTime = add_schedule.findViewById(R.id.set_startTime);
-        set_endTime = add_schedule.findViewById(R.id.set_endTime);
-
-        btn_add = add_schedule.findViewById(R.id.btn_add);
-
-
-
-
-
-
-
-
-        btn_add.setOnClickListener(new View.OnClickListener() {
+        this.set_startTime = dialog.findViewById(R.id.set_starTime);
+        this.set_startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newSchedule = new Schedule();
+                Dialog listDialog = new Dialog(context);
+                listDialog.setContentView(R.layout.set_time_dialog);
+                list_time = listDialog.findViewById(R.id.list_time);
 
-                day = getDay(set_day.getText().toString());
-                String[] detailStartTime = set_startTime.getText().toString().split(":");
-                String[] detailEndTime = set_endTime.getText().toString().split(":");
-                startTime = new Time(Integer.parseInt(detailStartTime[0]), Integer.parseInt(detailStartTime[1]));
-                endTime = new Time(Integer.parseInt(detailEndTime[0]), Integer.parseInt(detailEndTime[1]));
 
-                newSchedule.setClassTitle(set_name.getText().toString());
-                newSchedule.setProfessorName(set_professor.getText().toString());
-                newSchedule.setClassPlace(set_place.getText().toString());
-                newSchedule.setDay(day);
-                newSchedule.setStartTime(startTime);
-                newSchedule.setEndTime(endTime);
+                list = new ArrayList<String>();
+                list.add("09");
+                list.add("10");
+                list.add("11");
+                list.add("12");
+                list.add("13");
+                list.add("14");
+                list.add("15");
+                list.add("16");
+                list.add("17");
+                list.add("18");
+                list.add("19");
+                list.add("20");
+                list.add("21");
+                list.add("22");
 
-                Toast.makeText(context, "추가 완료!", Toast.LENGTH_SHORT);
-//                dialog.show().dismiss();
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list);
+                list_time.setAdapter(adapter);
 
+
+                list_min = listDialog.findViewById(R.id.list_min);
+
+                list1 = new ArrayList<String>();
+                list1.add("00");
+                list1.add("05");
+                list1.add("10");
+                list1.add("15");
+                list1.add("20");
+                list1.add("25");
+                list1.add("30");
+                list1.add("35");
+                list1.add("40");
+                list1.add("45");
+                list1.add("50");
+                list1.add("55");
+                list1.add("60");
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list1);
+                list_min.setAdapter(adapter1);
+
+
+
+
+
+
+
+                listDialog.show();
 
             }
         });
+
+        this.btn_add = dialog.findViewById(R.id.btn_add);
+
+        this.btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "successfully added", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+
 
 //        return this.newSchedule;
     }

@@ -258,8 +258,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btn_add_schedule:
 
-                AddSchedule addSchedule = new AddSchedule(MainActivity.this, this.temp);
-                addSchedule.addSchedule();
+                AddSchedule addSchedule = new AddSchedule(MainActivity.this);
+                addSchedule.addNewSchedule();
 //                this.temp.add();
                 return true;
             default:

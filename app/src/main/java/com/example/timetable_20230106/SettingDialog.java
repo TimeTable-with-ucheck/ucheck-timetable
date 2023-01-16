@@ -30,11 +30,11 @@ public class SettingDialog {
         AlertDialog.Builder dialog = new AlertDialog.Builder( this.context );
         AlarmData alarmData = alarmService.findAlarmData(schedules);
         dialog.setTitle(alarmData.getClassTitle());
-        setting_dialog = (View) View.inflate( this.context , R.layout.setting_dialog, null);
-        dialog.setView(setting_dialog);
-        switch_setting = setting_dialog.findViewById(R.id.switch_setting);
-        switch_setting.setChecked(alarmData.getIsOn());
-        switch_setting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.setting_dialog = (View) View.inflate( this.context , R.layout.setting_dialog, null);
+        dialog.setView(this.setting_dialog);
+        this.switch_setting = setting_dialog.findViewById(R.id.switch_setting);
+        this.switch_setting.setChecked(alarmData.getIsOn());
+        this.switch_setting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     alarmData.setIsOn(b);
