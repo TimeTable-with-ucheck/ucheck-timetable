@@ -31,7 +31,7 @@
         android:id="@+id/set_day"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:hint="             요일"
+        android:hint="           요일"
         android:textSize="14dp"
         android:layout_gravity="center"
         android:layout_margin="10dp"/>

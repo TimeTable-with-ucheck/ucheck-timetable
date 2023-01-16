@@ -10,10 +10,6 @@
         android:layout_height="wrap_content">
 </ListView>
 
-    <ListView
-        android:id="@+id/list_min"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content">
-    </ListView>
+ \
 
 </LinearLayout>
