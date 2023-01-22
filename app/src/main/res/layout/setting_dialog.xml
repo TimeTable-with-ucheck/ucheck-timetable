@@ -11,4 +11,10 @@
         android:switchPadding="20dp"
         android:text="  알림" />
 
+    <Button
+        android:id="@+id/btn_remove"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="과목삭제"/>
+
 </LinearLayout>

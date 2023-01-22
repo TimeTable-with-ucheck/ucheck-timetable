@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Schedule> temp;
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
     AddSchedule addSchedule;
+    SettingDialog settingDialog;
+
+    public MainActivity() {
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -79,10 +83,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
               //  createNotification(schedules);
-                SettingDialog settingDialog = new SettingDialog(MainActivity.this);
-                settingDialog.showMenu(schedules,alarmService);
+//                init();
+
+                settingDialog = new SettingDialog(MainActivity.this);
+                settingDialog.showMenu(schedules,alarmService,Timetable);
                 alarmService.alarmTest();
-                Toast.makeText(MainActivity.this,"hour:"+schedules.get(0).getStartTime().getHour() +" min :"+schedules.get(0).getStartTime().getMinute(),Toast.LENGTH_SHORT).show();
+
+
+
+//                Toast.makeText(MainActivity.this,""+schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
                }
 
             /**
@@ -135,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                            Timetable.removeAll();
                            for (ArrayList<Schedule> schedules : Scheduless) {
                                Timetable.add(schedules);
-
                            }
                            Toast.makeText(MainActivity.this, "성공!", Toast.LENGTH_SHORT).show();
                            saveState();
@@ -256,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btn_add_schedule:
                     this.addSchedule = new AddSchedule(MainActivity.this);
-                    this.addSchedule.addNewSchedule(this.Timetable);
+                    this.addSchedule.addNewSchedule(this.Timetable, this.alarmService, this.gson);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

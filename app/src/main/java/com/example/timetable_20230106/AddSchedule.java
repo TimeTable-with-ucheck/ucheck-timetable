@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
 import com.github.tlaabs.timetableview.TimetableView;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class AddSchedule {
 
 
 
+
     public AddSchedule(Context context){
         this.context = context;
 
@@ -64,7 +66,8 @@ public class AddSchedule {
 
 //커스텀 다이얼로그로 만들었어요
     @SuppressLint("ResourceType")
-    public void addNewSchedule(TimetableView Timetable) {
+    public void addNewSchedule(TimetableView Timetable, AlarmService alarmService, Gson gson) {
+
 
         this.dialog = new Dialog(this.context);
         this.dialog.setContentView(R.layout.add_schedule_dialog);
@@ -113,14 +116,17 @@ public class AddSchedule {
                 createSchedule(set_name.getText().toString(), set_place.getText().toString(), set_professor.getText().toString(), dayForSchedule, startTime, endTime);
                 Toast.makeText(context, "successfully added", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-
                     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
                     schedules.add(getAddedSchedule());
                     Timetable.add(schedules);
+                    ArrayList<ArrayList<Schedule>> scheduless = new ArrayList<>();
+                    scheduless.add(schedules);
+                    alarmService.createAlarmData(scheduless);
                 }
 
         });
     }
+
     private int getDay(String day){
         switch (day){
             case "월": return 0;
