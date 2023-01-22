@@ -10,7 +10,7 @@
         android:id="@+id/set_name"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:hint="일정 이름 "
+        android:hint="강의 명 "
         android:textSize="12dp"
         android:layout_gravity="center"/>
     <EditText

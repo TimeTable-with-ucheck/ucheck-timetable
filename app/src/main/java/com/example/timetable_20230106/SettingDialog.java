@@ -38,6 +38,7 @@ public class SettingDialog {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     alarmData.setIsOn(b);
+
             }
         });
         dialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {

@@ -34,6 +34,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        goAsync();
+
         System.out.println(TAG+ "onReceive 알람이 들어옴!!");
         int day = intent.getIntExtra("weekday", -1)+2;
         String title = intent.getStringExtra("title");
@@ -62,6 +65,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             intent2.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent2.setData(Uri.parse("market://details?id="+packageName));
         }
+
         PendingIntent ucheckIntent = PendingIntent.getActivity(context,0,intent2,PendingIntent.FLAG_IMMUTABLE);
         //알림창 제목
         builder.setContentTitle("유체크 알람"); //회의명노출

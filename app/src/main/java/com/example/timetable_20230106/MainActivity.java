@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     AlarmService alarmService;
     ArrayList<Schedule> temp;
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
+    AddSchedule addSchedule;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -81,13 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 SettingDialog settingDialog = new SettingDialog(MainActivity.this);
                 settingDialog.showMenu(schedules,alarmService);
                 alarmService.alarmTest();
-//                if(findAlarmData(schedules).getIsOn()){
-//                    alarmOff(schedules);
-//                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 끔", Toast.LENGTH_SHORT).show();
-//                }else{
-//                    alarmOn(schedules);
-//                    Toast.makeText(MainActivity.this,schedules.get(0).getClassTitle()+ " 알람 킴", Toast.LENGTH_SHORT).show();
-//                }
+                Toast.makeText(MainActivity.this,"hour:"+schedules.get(0).getStartTime().getHour() +" min :"+schedules.get(0).getStartTime().getMinute(),Toast.LENGTH_SHORT).show();
                }
 
             /**
@@ -105,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 nr.onReceive(MainActivity.this,intent);
             }
         });
+
+
+
     }
 
 
@@ -133,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         super.handleMessage(msg);
                         System.out.println(((ArrayList<Schedule>)msg.obj));
                        if(((ArrayList<Schedule>)msg.obj).size()>0) {
-                           ArrayList<ArrayList<Schedule>> Scheduless = convertScheduleList((ArrayList<Schedule>)msg.obj);
+                           ArrayList< ArrayList<Schedule>> Scheduless = convertScheduleList((ArrayList<Schedule>)msg.obj);
                            Timetable.removeAll();
                            for (ArrayList<Schedule> schedules : Scheduless) {
                                Timetable.add(schedules);
@@ -218,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("reset");
         editor.commit();
     }
-
     private ArrayList<ArrayList<Schedule>> convertScheduleList(ArrayList<Schedule> schedules){
         ArrayList<ArrayList<Schedule>> scheduless = new ArrayList<ArrayList<Schedule>>();
         for(Schedule schedule : schedules){
@@ -258,10 +255,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.btn_add_schedule:
-
-                AddSchedule addSchedule = new AddSchedule(MainActivity.this);
-                addSchedule.addNewSchedule();
-//                this.temp.add();
+                    this.addSchedule = new AddSchedule(MainActivity.this);
+                    this.addSchedule.addNewSchedule(this.Timetable);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

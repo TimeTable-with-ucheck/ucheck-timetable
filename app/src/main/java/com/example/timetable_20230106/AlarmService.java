@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
@@ -130,28 +133,40 @@ public class AlarmService {
     public void setAlarmDataList(ArrayList<AlarmData> alarmDataList){
         this.alarmDataList = alarmDataList;
     }
+
     public void alarmTest(){
+
+
+
         Intent intent = new Intent();
+
         intent.putExtra("weekday",Calendar.DAY_OF_WEEK-2);
+
         intent.putExtra("title","테스트 ");
+
         Calendar calendar = Calendar.getInstance();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalTime now = LocalTime.now();
-            calendar.set(Calendar.HOUR_OF_DAY,now.getHour());
-            calendar.set(Calendar.MINUTE, (now.getMinute()%60+2));
+        Toast.makeText(context,calendar.getTime().toString(),Toast.LENGTH_SHORT);
+        System.out.println("-----------------------------"+calendar.getTime().toString());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        LocalTime now = LocalTime.now();
+        calendar.set(Calendar.HOUR_OF_DAY,now.getHour());
+            calendar.set(Calendar.MINUTE, ((now.getMinute())%60+1));
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            System.out.println(now.getHour()+ "시  "+ (now.getMinute()%60+2)+"분");
-        }
+            System.out.println(now.getHour()+ "시  "+ ((now.getMinute()%60)+1)+"분");
+//        }
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 12345, intent , PendingIntent.FLAG_IMMUTABLE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis() ,pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis() ,pendingIntent);
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() , pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
         System.out.println("테스트 알람 등록"+" 현제 시간: "+System.currentTimeMillis()+" - 설정 시간: "+ calendar.getTimeInMillis() );
-
         noti();
     }
-
     public void noti(){
         NotificationReceiver notificationReceiver = new NotificationReceiver();
         Intent intent = new Intent();
