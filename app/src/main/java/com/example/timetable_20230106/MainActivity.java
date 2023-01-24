@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder urlPopUp(){
         AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
         ad.setIcon(R.mipmap.ic_launcher);
-        ad.setTitle("url입력");
-        ad.setMessage("에타 시간표 공유 url을 넣어주세요");
+        ad.setTitle("URL 입력");
+        ad.setMessage("에타 시간표 공유 URL을 넣어주세요");
         final EditText et = new EditText(MainActivity.this);
         ad.setView(et);
         ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
