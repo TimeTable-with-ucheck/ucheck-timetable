@@ -74,7 +74,19 @@
                 android:layout_height="wrap_content"
                 android:hint="00 : 00"
                 android:layout_gravity="center"/>
+
+
+
         </LinearLayout>
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="  ∨"
+        android:textSize="10dp"/>
+
+
 
     <Button
         android:id="@+id/btn_add"
@@ -84,7 +96,8 @@
         android:text="추가"
         android:textSize="12dp"
         android:layout_margin="3dp"
-
+        android:background="#000080"
+        android:textColor="@color/white"
         />
 
 </LinearLayout>
