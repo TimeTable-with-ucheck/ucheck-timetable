@@ -84,13 +84,9 @@ public class MainActivity extends AppCompatActivity {
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
               //  createNotification(schedules);
 //                init();
-
                 settingDialog = new SettingDialog(MainActivity.this);
                 settingDialog.showMenu(schedules,alarmService,Timetable);
                 alarmService.alarmTest();
-
-
-
 //                Toast.makeText(MainActivity.this,""+schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
                }
 

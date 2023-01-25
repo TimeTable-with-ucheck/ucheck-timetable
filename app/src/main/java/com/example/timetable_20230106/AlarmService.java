@@ -121,6 +121,12 @@ public class AlarmService {
         }
     }
 
+    public void addAlarmData(ArrayList<Schedule> schedules, Context context) {
+        AlarmData alarmData = new AlarmData(schedules, context);
+        this.alarmDataList.add(alarmData);
+        regist(alarmData);
+    }
+
     public AlarmData findAlarmData(ArrayList<Schedule> schedules){
         for(AlarmData alarmData : alarmDataList){
             if(alarmData.isTitleEqual(schedules.get(0).getClassTitle()))return alarmData;

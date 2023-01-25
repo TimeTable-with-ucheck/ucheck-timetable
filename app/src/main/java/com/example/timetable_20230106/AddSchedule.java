@@ -68,12 +68,9 @@ public class AddSchedule {
     @SuppressLint("ResourceType")
     public void addNewSchedule(TimetableView Timetable, AlarmService alarmService, Gson gson) {
 
-
         this.dialog = new Dialog(this.context);
         this.dialog.setContentView(R.layout.add_schedule_dialog);
         this.dialog.show();
-
-
         this.set_name = dialog.findViewById(R.id.set_name);
         this.set_professor = dialog.findViewById(R.id.set_professor);
         this.set_place = dialog.findViewById(R.id.set_place);
@@ -119,9 +116,7 @@ public class AddSchedule {
                     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
                     schedules.add(getAddedSchedule());
                     Timetable.add(schedules);
-                    ArrayList<ArrayList<Schedule>> scheduless = new ArrayList<>();
-                    scheduless.add(schedules);
-                    alarmService.createAlarmData(scheduless);
+                    alarmService.addAlarmData(schedules, context);
                 }
 
         });
