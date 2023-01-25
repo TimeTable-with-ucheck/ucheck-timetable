@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     >
 
     <EditText
@@ -80,11 +81,175 @@
         </LinearLayout>
 
     <TextView
+        android:id="@+id/add_another_schedule"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="  ∨"
         android:textSize="10dp"/>
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/another_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:orientation="vertical">
+
+
+
+<!--        2     -->
+
+
+    <TextView
+        android:id="@+id/set_another_day"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:hint="           요일"
+        android:textSize="14dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="시작시간"/>
+
+
+        <TextView
+            android:id="@+id/set_another_starTime"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:hint="00 : 00"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="종료시간"/>
+
+        <TextView
+            android:id="@+id/set_another_endTime"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:hint="00 : 00"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/add_another_another_schedule"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="  ∨"
+        android:textSize="10dp"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+<!--     3     -->
+
+
+
+    <LinearLayout
+        android:id="@+id/another_layout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:orientation="vertical">
+
+
+
+        <TextView
+            android:id="@+id/set_another_day2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="           요일"
+            android:textSize="14dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="시작시간"/>
+
+
+            <TextView
+                android:id="@+id/set_another_starTime2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:hint="00 : 00"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="종료시간"/>
+
+            <TextView
+                android:id="@+id/set_another_endTime2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:hint="00 : 00"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/add_another_another_schedule2"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="  ∨"
+            android:textSize="10dp"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
 
 
 
@@ -99,5 +264,7 @@
         android:background="#000080"
         android:textColor="@color/white"
         />
+
+
 
 </LinearLayout>
