@@ -29,14 +29,14 @@ public class AddSchedule {
 
     Context context;
 
-    View add_schedule;
+    View add_schedule, add_schedule_for_recycle_schedule;
     LinearLayout another_layout, another_layout2;
     EditText set_name, set_professor, set_place;
 
 
     Button btn_add;
 
-    TextView  set_day, set_startTime ,set_endTime, add_another_schedule, add_another_another_schedule;
+    TextView  set_day, set_startTime ,set_endTime, tv_add_schedule, tv_add_another_schedule;
     ListView list_time, list_day;
     int startHour, startMin, endHour, endMin;
     List<String> list, list1;
@@ -55,34 +55,23 @@ public class AddSchedule {
 
     Dialog dialog;
 
-
-
-
-
-
     public AddSchedule(Context context){
         this.context = context;
-
-
-
     }
 
 //커스텀 다이얼로그로 만들었어요
     @SuppressLint("ResourceType")
     public void addNewSchedule(TimetableView Timetable, AlarmService alarmService, Gson gson) {
-
         this.dialog = new Dialog(this.context);
         this.dialog.setContentView(R.layout.add_schedule_dialog);
         this.dialog.show();
-
-        this.another_layout =dialog.findViewById(R.id.another_layout);
-        this.another_layout2 = dialog.findViewById(R.id.another_layout2);
-        this.add_another_another_schedule = dialog.findViewById(R.id.add_another_another_schedule);
+//        this.another_layout2 = dialog.findViewById(R.id.another_layout2);
+//        this.add_another_another_schedule = dialog.findViewById(R.id.add_another_another_schedule);
                 this.set_name = dialog.findViewById(R.id.set_name);
         this.set_professor = dialog.findViewById(R.id.set_professor);
         this.set_place = dialog.findViewById(R.id.set_place);
         this.set_day = dialog.findViewById(R.id.set_day);
-        this.add_another_schedule = dialog.findViewById(R.id.add_another_schedule);
+
 
         this.set_day.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,22 +118,10 @@ public class AddSchedule {
 
         });
 
-        this.add_another_schedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                another_layout.setVisibility(View.VISIBLE);
-            }
-        });
 
-        this.add_another_another_schedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                another_layout2.setVisibility(View.VISIBLE);
-            }
-        });
+
 
     }
-
     private int getDay(String day){
         switch (day){
             case "월": return 0;

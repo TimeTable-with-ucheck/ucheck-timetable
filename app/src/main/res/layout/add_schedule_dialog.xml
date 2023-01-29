@@ -28,220 +28,189 @@
         android:hint="장소"
         android:textSize="12dp"
         android:layout_gravity="center"/>
-    <TextView
-        android:id="@+id/set_day"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:hint="           요일"
-        android:textSize="14dp"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"/>
+<include layout="@layout/add_schedule_for_recycle_dialog"
+    android:visibility="visible"/>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="시작시간"/>
-
-
-        <TextView
-            android:id="@+id/set_starTime"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="00 : 00"
-            android:layout_gravity="center"/>
-    </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="종료시간"/>
-
-            <TextView
-                android:id="@+id/set_endTime"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:hint="00 : 00"
-                android:layout_gravity="center"/>
-
-
-
-        </LinearLayout>
-
-    <TextView
-        android:id="@+id/add_another_schedule"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="  ∨"
-        android:textSize="10dp"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_first"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_second"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_third"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_forth"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_fifth"/>
+    <include layout="@layout/add_schedule_for_recycle_dialog"
+        android:visibility="gone"
+        android:id="@+id/view_six"/>
 
 
 
 
 
-    <LinearLayout
-        android:id="@+id/another_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:orientation="vertical">
+
+
+<!--    <include layout="@layout/add_schedule_for_recycle_dialog" />-->
+<!--    <include layout="@layout/add_schedule_for_recycle_dialog" />-->
+<!--    <include layout="@layout/add_schedule_for_recycle_dialog" />-->
+<!--    <include layout="@layout/add_schedule_for_recycle_dialog" />-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/another_layout"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="gone"-->
+<!--        android:orientation="vertical">-->
 
 
 
-<!--        2     -->
+<!--&lt;!&ndash;        2     &ndash;&gt;-->
 
 
-    <TextView
-        android:id="@+id/set_another_day"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:hint="           요일"
-        android:textSize="14dp"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/set_another_day"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="           요일"-->
+<!--        android:textSize="14dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_margin="10dp"/>-->
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_margin="10dp">-->
 
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="시작시간"/>
-
-
-        <TextView
-            android:id="@+id/set_another_starTime"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="00 : 00"
-            android:layout_gravity="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="종료시간"/>
-
-        <TextView
-            android:id="@+id/set_another_endTime"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="00 : 00"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/add_another_another_schedule"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="  ∨"
-        android:textSize="10dp"/>
+<!--        <TextView-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="시작시간"/>-->
 
 
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/set_another_starTime"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="00 : 00"-->
+<!--            android:layout_gravity="center"/>-->
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_margin="10dp">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="종료시간"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/set_another_endTime"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="00 : 00"-->
+<!--            android:layout_gravity="center"/>-->
+
+<!--    </LinearLayout>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/add_another_another_schedule"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:text="  ∨"-->
+<!--        android:textSize="10dp"/>-->
 
 
-
-
-
-<!--     3     -->
+<!--    </LinearLayout>-->
 
 
 
-    <LinearLayout
-        android:id="@+id/another_layout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:orientation="vertical">
+
+
+<!--&lt;!&ndash;     3     &ndash;&gt;-->
 
 
 
-        <TextView
-            android:id="@+id/set_another_day2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:hint="           요일"
-            android:textSize="14dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"/>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/another_layout2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="invisible"-->
+<!--        android:orientation="vertical">-->
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
 
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="시작시간"/>
-
-
-            <TextView
-                android:id="@+id/set_another_starTime2"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:hint="00 : 00"
-                android:layout_gravity="center"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="종료시간"/>
-
-            <TextView
-                android:id="@+id/set_another_endTime2"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:hint="00 : 00"
-                android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/add_another_another_schedule2"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="  ∨"
-            android:textSize="10dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/set_another_day2"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="           요일"-->
+<!--            android:textSize="14dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_margin="10dp"/>-->
 
 
-    </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_margin="10dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="시작시간"/>-->
+
+
+<!--            <TextView-->
+<!--                android:id="@+id/set_another_starTime2"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="00 : 00"-->
+<!--                android:layout_gravity="center"/>-->
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_margin="10dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="종료시간"/>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/set_another_endTime2"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="00 : 00"-->
+<!--                android:layout_gravity="center"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/add_another_another_schedule2"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:text="  ∨"-->
+<!--            android:textSize="10dp"/>-->
+
+
+<!--    </LinearLayout>-->
 
 
 
