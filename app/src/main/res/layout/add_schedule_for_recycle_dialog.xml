@@ -45,18 +45,15 @@
                     android:layout_height="wrap_content"
                     android:hint="00 : 00"
                     android:layout_gravity="center"/>
-
             </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_add_schedule"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="  ∨"
-        android:textSize="10dp"/>
-
-
+<!--    <TextView-->
+<!--        android:id="@+id/tv_add_schedule"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:text="  요일 및 시간 추가"-->
+<!--        android:textSize="11dp"/>-->
 
 
 </LinearLayout>

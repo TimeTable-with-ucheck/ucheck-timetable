@@ -34,9 +34,8 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        Log.d(TAG,"onReceived() 호출됨");
         goAsync();
-
         System.out.println(TAG+ "onReceive 알람이 들어옴!!");
         int day = intent.getIntExtra("weekday", -1)+2;
         String title = intent.getStringExtra("title");
@@ -44,10 +43,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         System.out.println("이름->" +title);
         if(Calendar.DAY_OF_WEEK != day)return;
         builder = null;
-
         //푸시 알림을 보내기위해 시스템에 권한을 요청하여 생성
         manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-
         //안드로이드 오레오 버전 대응
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel nc =  new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);

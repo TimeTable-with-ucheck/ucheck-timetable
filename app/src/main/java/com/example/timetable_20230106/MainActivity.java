@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
     private ActivityMainBinding binding;
     TimetableView Timetable;
     WebView webView;
@@ -59,19 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String packageName = "com.libeka.attendance.ucheckplusstud";
     AddSchedule addSchedule;
     SettingDialog settingDialog;
-
     public MainActivity() {
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         this.setTitle("TimeTable with UCheck");
-
         super.onCreate(savedInstanceState);
         init();
-
         btn_addTimetable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
 //                init();
                 settingDialog = new SettingDialog(MainActivity.this);
                 settingDialog.showMenu(schedules,alarmService,Timetable);
+
                 alarmService.alarmTest();
 //                Toast.makeText(MainActivity.this,""+schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
                }
-
             /**
              * 알람 강제 발생 메소드
              * @param schedules
@@ -105,12 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 nr.onReceive(MainActivity.this,intent);
             }
         });
-
-
-
     }
-
-
     /**
      * url 입력창
      * @return
@@ -162,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         });
         return ad;
     }
-
     /**
      * onCreate생성시 선언할 것들
      */
@@ -172,10 +160,9 @@ public class MainActivity extends AppCompatActivity {
         Timetable = findViewById(R.id.timetable);
         webView = binding.webView;
         btn_addTimetable = binding.btnAddTimetable;
-        alarmService = new AlarmService(this);
+        alarmService = new AlarmService(MainActivity.this);
         gson = new Gson();
     }
-
     @Override
     protected void onResume(){
         super.onResume();
@@ -244,16 +231,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return -1;
     }
-
     //title bar에 버튼 추가
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
     //title bar action
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items

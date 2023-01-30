@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -22,8 +23,9 @@ public class AlarmService {
     private ArrayList<AlarmData> alarmDataList;
     public AlarmService(Context context){
         this.context  = context;
-        alarmManager= (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager= (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
         alarmDataList = new ArrayList<>();
+        Log.d("123","알람서비스 생성!!!!!!!!!!!!!!!");
     }
     /**
      * 알람 메니저에 알람 등록
@@ -142,12 +144,8 @@ public class AlarmService {
 
     public void alarmTest(){
 
-
-
         Intent intent = new Intent();
-
         intent.putExtra("weekday",Calendar.DAY_OF_WEEK-2);
-
         intent.putExtra("title","테스트 ");
 
         Calendar calendar = Calendar.getInstance();

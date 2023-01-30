@@ -1,8 +1,11 @@
 package com.example.timetable_20230106;
 
+import static android.view.View.*;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,39 +25,28 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-
 //강의 직접 추가하는 기능
-
-
 public class AddSchedule {
 
     Context context;
-
     View add_schedule, add_schedule_for_recycle_schedule;
-    LinearLayout another_layout, another_layout2;
     EditText set_name, set_professor, set_place;
-
-
     Button btn_add;
-
     TextView  set_day, set_startTime ,set_endTime, tv_add_schedule, tv_add_another_schedule;
     ListView list_time, list_day;
     int startHour, startMin, endHour, endMin;
     List<String> list, list1;
-
     String time = "";
     String day = "";
-
     String classTitle="";
     String classPlace="";
     String professorName="";
     private int dayForSchedule = 0;
     private Time startTime;
     private Time endTime;
-
     Schedule schedule;
-
     Dialog dialog;
+    ScrollView scrollView;
 
     public AddSchedule(Context context){
         this.context = context;
@@ -65,15 +58,12 @@ public class AddSchedule {
         this.dialog = new Dialog(this.context);
         this.dialog.setContentView(R.layout.add_schedule_dialog);
         this.dialog.show();
-//        this.another_layout2 = dialog.findViewById(R.id.another_layout2);
-//        this.add_another_another_schedule = dialog.findViewById(R.id.add_another_another_schedule);
-                this.set_name = dialog.findViewById(R.id.set_name);
+        this.set_name = dialog.findViewById(R.id.set_name);
         this.set_professor = dialog.findViewById(R.id.set_professor);
         this.set_place = dialog.findViewById(R.id.set_place);
         this.set_day = dialog.findViewById(R.id.set_day);
 
-
-        this.set_day.setOnClickListener(new View.OnClickListener() {
+        this.set_day.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Dialog listDialog = new Dialog(context);
@@ -84,7 +74,7 @@ public class AddSchedule {
 
         this.set_startTime = dialog.findViewById(R.id.set_starTime);
         
-        this.set_startTime.setOnClickListener(new View.OnClickListener() {      // 시작 시간 textView 누르면 실행되는 메소드
+        this.set_startTime.setOnClickListener(new OnClickListener() {      // 시작 시간 textView 누르면 실행되는 메소드
             @Override
             public void onClick(View view) {
                 Dialog listDialog = new Dialog(context);
@@ -94,7 +84,7 @@ public class AddSchedule {
         });
 
         this.set_endTime = dialog.findViewById(R.id.set_endTime);
-        this.set_endTime.setOnClickListener(new View.OnClickListener() {
+        this.set_endTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Dialog listDialog = new Dialog(context);
@@ -103,24 +93,20 @@ public class AddSchedule {
             }
         });
         this.btn_add = dialog.findViewById(R.id.btn_add);
-        //
-        this.btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createSchedule(set_name.getText().toString(), set_place.getText().toString(), set_professor.getText().toString(), dayForSchedule, startTime, endTime);
-                Toast.makeText(context, "successfully added", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+
+        // 추가 버튼
+            this.btn_add.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    createSchedule(set_name.getText().toString(), set_place.getText().toString(), set_professor.getText().toString(), dayForSchedule, startTime, endTime);
+                    dialog.dismiss();
                     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
                     schedules.add(getAddedSchedule());
                     Timetable.add(schedules);
                     alarmService.addAlarmData(schedules, context);
+                    Toast.makeText(context, "successfully added", Toast.LENGTH_SHORT).show();
                 }
-
-        });
-
-
-
-
+            });
     }
     private int getDay(String day){
         switch (day){
@@ -250,4 +236,9 @@ public class AddSchedule {
 
     public Schedule getAddedSchedule() { return this.schedule; }
 
+    public Schedule getAnotherSchedule(Schedule schedule, TextView textView, Dialog dialog) {
+
+        return schedule;
+    }
 }
+
