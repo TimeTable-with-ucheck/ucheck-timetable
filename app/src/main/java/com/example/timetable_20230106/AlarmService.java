@@ -21,9 +21,10 @@ public class AlarmService {
     private Context context;
     private AlarmManager alarmManager;
     private ArrayList<AlarmData> alarmDataList;
+    NotificationReceiver notificationReceiver;
     public AlarmService(Context context){
         this.context  = context;
-        alarmManager= (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager= (AlarmManager) this.context.getSystemService(this.context.ALARM_SERVICE);
         alarmDataList = new ArrayList<>();
         Log.d("123","알람서비스 생성!!!!!!!!!!!!!!!");
     }
@@ -32,6 +33,7 @@ public class AlarmService {
      * @param alarmData
      */
     private void regist(AlarmData alarmData) {
+        Log.d("123","regist on!!!!!!!!!!!!!~~~~~~~~~");
         long intervalDay = 24 * 60 * 60 * 1000;// 24시간
         int size = alarmData.getSize();
         int[] id = alarmData.getId();
@@ -143,11 +145,10 @@ public class AlarmService {
     }
 
     public void alarmTest(){
-
-        Intent intent = new Intent();
+//        noti();
+        Intent intent = new Intent(this.context, NotificationReceiver.class);
         intent.putExtra("weekday",Calendar.DAY_OF_WEEK-2);
-        intent.putExtra("title","테스트 ");
-
+        intent.putExtra("title","테스트");
         Calendar calendar = Calendar.getInstance();
         Toast.makeText(context,calendar.getTime().toString(),Toast.LENGTH_SHORT);
         System.out.println("-----------------------------"+calendar.getTime().toString());
@@ -169,13 +170,13 @@ public class AlarmService {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
         System.out.println("테스트 알람 등록"+" 현제 시간: "+System.currentTimeMillis()+" - 설정 시간: "+ calendar.getTimeInMillis() );
-        noti();
+
     }
     public void noti(){
-        NotificationReceiver notificationReceiver = new NotificationReceiver();
+        this.notificationReceiver = new NotificationReceiver();
         Intent intent = new Intent();
         intent.putExtra("weekday",Calendar.DAY_OF_WEEK-2);
         intent.putExtra("title","테스트 ");
-        notificationReceiver.onReceive(context,intent);
+//        notificationReceiver.onReceive(context,intent);
     }
 }

@@ -4,11 +4,13 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -34,20 +36,23 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG,"onReceived() 호출됨");
+        Log.d(TAG, "fuckingReceive 호출됨");
         goAsync();
-        System.out.println(TAG+ "onReceive 알람이 들어옴!!");
-        int day = intent.getIntExtra("weekday", -1)+2;
+        System.out.println(TAG + "onReceive 알람이 들어옴!!");
+        int day = intent.getIntExtra("weekday", -1) + 2;
         String title = intent.getStringExtra("title");
-        System.out.println("입력된 날자 = "+day+" 현재 날자 ="+Calendar.DAY_OF_WEEK);
-        System.out.println("이름->" +title);
-        if(Calendar.DAY_OF_WEEK != day)return;
+        System.out.println("입력된 날자 = " + day + " 현재 날자 =" + Calendar.DAY_OF_WEEK);
+        System.out.println("이름->" + title);
+        if (Calendar.DAY_OF_WEEK != day) return;
         builder = null;
         //푸시 알림을 보내기위해 시스템에 권한을 요청하여 생성
-        manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String get_yout_string = intent.getExtras().getString("title");
+
         //안드로이드 오레오 버전 대응
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel nc =  new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             nc.enableLights(true);
             nc.enableVibration(true);
             manager.createNotificationChannel(nc);
@@ -55,18 +60,18 @@ public class NotificationReceiver extends BroadcastReceiver {
         } else {
             builder = new NotificationCompat.Builder(context);
         }
-        if(getPackageList(context)){
+        if (getPackageList(context)) {
             intent2 = context.getPackageManager().getLaunchIntentForPackage(packageName);
-        }else{
+        } else {
             intent2 = new Intent(Intent.ACTION_VIEW);
             intent2.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent2.setData(Uri.parse("market://details?id="+packageName));
+            intent2.setData(Uri.parse("market://details?id=" + packageName));
         }
+        PendingIntent ucheckIntent = PendingIntent.getActivity(context, 12345, intent2, PendingIntent.FLAG_IMMUTABLE);
 
-        PendingIntent ucheckIntent = PendingIntent.getActivity(context,0,intent2,PendingIntent.FLAG_IMMUTABLE);
         //알림창 제목
         builder.setContentTitle("유체크 알람"); //회의명노출
-        builder.setContentText(title+" 수업 출석 가능 시간입니다");
+        builder.setContentText(title + " 수업 출석 가능 시간입니다");
         //알림창 아이콘
         builder.setSmallIcon(com.google.android.material.R.drawable.notification_template_icon_bg);
         //알림창 터치시 자동 삭제
@@ -76,8 +81,12 @@ public class NotificationReceiver extends BroadcastReceiver {
         //푸시알림 빌드
         Notification notification = builder.build();
         //NotificationManager를 이용하여 푸시 알림 보내기
-        manager.notify(1,notification);
+        manager.notify(1, notification);
     }
+
+
+
+
     //ucheck 어플이 깔려있는지 확인하는 메소드
 
     public boolean getPackageList(Context context) {
