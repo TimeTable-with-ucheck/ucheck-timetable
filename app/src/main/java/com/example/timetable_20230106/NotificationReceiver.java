@@ -1,5 +1,6 @@
 package com.example.timetable_20230106;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,6 +9,7 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.RingtoneManager;
@@ -18,6 +20,10 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -33,9 +39,17 @@ public class NotificationReceiver extends BroadcastReceiver {
     private static String CHANNEL_ID = "channel1";
     private static String CHANNEL_NAME = "Channel1";
 
+    public NotificationReceiver(){
+        System.out.println("리시버 시작");
+    }
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
+        if(intent.getAction() == Intent.ACTION_BOOT_COMPLETED)reboot(context,intent);
+        else notifi(context, intent);
+    }
+
+    private void notifi(Context context, Intent intent) {
         Calendar calendar = Calendar.getInstance();
         System.out.println(TAG + "onReceive 알람이 들어옴!!");
         int day = intent.getIntExtra("weekday", -1) + 2;
@@ -84,8 +98,6 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
 
-
-
     //ucheck 어플이 깔려있는지 확인하는 메소드
 
     public boolean getPackageList(Context context) {
@@ -108,6 +120,22 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
         return isExist;
     }
-
+    public void reboot(Context context, Intent intent) {
+        System.out.println("재부팅 절차");
+        AlarmService alarmService = new AlarmService(context);
+        SharedPreferences preferences = context.getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        if ((preferences != null) && (preferences.contains("alarmDataList"))) {
+            String alarmDataListString = preferences.getString("alarmDataList", null);
+            if (alarmDataListString != null) {
+                Gson gson = new Gson();
+                ArrayList<AlarmData> alarmDataList = gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
+                }.getType());
+                alarmService.setAlarmDataList(alarmDataList);
+                alarmService.reRegistAll();
+            } else {
+                System.out.println("in reboot list is null");
+            }
+        }
+    }
 
 }

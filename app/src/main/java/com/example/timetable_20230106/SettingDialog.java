@@ -56,6 +56,8 @@ public class SettingDialog {
             @Override
             public void onClick(View view) {
                 Timetable.remove(idx);
+                alarmService.unRegist(alarmData);
+                alarmService.removeAlarmData(alarmData);
             }
         });
 

@@ -23,7 +23,6 @@ public class AlarmService {
     private ArrayList<AlarmData> alarmDataList;
     NotificationReceiver notificationReceiver;
     public AlarmService(Context context){
-        System.out.println("알람 서비스 등록");
         this.context  = context;
         alarmManager= (AlarmManager) this.context.getSystemService(this.context.ALARM_SERVICE);
         alarmDataList = new ArrayList<>();
@@ -68,7 +67,7 @@ public class AlarmService {
      * 알람 메니저에서 등록된 알람 제거
      * @param alarmData
      */
-    private void unRegist(AlarmData alarmData) {
+    public void unRegist(AlarmData alarmData) {
         Intent[] intents = alarmData.getIntent();
         int[] id = alarmData.getId();
         for(int i = 0; i<alarmData.getSize(); i++) {
@@ -132,7 +131,7 @@ public class AlarmService {
         this.alarmDataList.add(alarmData);
         patchAlarm(alarmData);
     }
- 
+
     public AlarmData findAlarmData(ArrayList<Schedule> schedules){
         for(AlarmData alarmData : alarmDataList){
             if(alarmData.isTitleEqual(schedules.get(0).getClassTitle()))return alarmData;
@@ -188,5 +187,11 @@ public class AlarmService {
         intent.putExtra("weekday",Calendar.DAY_OF_WEEK-2);
         intent.putExtra("title","테스트 ");
 //        notificationReceiver.onReceive(context,intent);
+    }
+    public void removeAlarmData(AlarmData alarmData){
+        for(AlarmData alarmData1: alarmDataList){
+            if(alarmData1.isTitleEqual(alarmData.getClassTitle())) alarmDataList.remove(alarmData1);
+            return;
+        }
     }
 }
