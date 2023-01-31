@@ -44,7 +44,6 @@ public class AddSchedule {
     private int dayForSchedule = 0;
     private Time startTime;
     private Time endTime;
-    Schedule schedule;
     Dialog dialog;
     ScrollView scrollView;
 
@@ -98,10 +97,9 @@ public class AddSchedule {
             this.btn_add.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    createSchedule(set_name.getText().toString(), set_place.getText().toString(), set_professor.getText().toString(), dayForSchedule, startTime, endTime);
                     dialog.dismiss();
                     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-                    schedules.add(getAddedSchedule());
+                    schedules.add(createSchedule(set_name.getText().toString(), set_place.getText().toString(), set_professor.getText().toString(), dayForSchedule, startTime, endTime));
                     Timetable.add(schedules);
                     alarmService.addAlarmData(schedules, context);
                     Toast.makeText(context, "successfully added", Toast.LENGTH_SHORT).show();
@@ -224,17 +222,16 @@ public class AddSchedule {
 
 
 
-    public void createSchedule(String classTitle, String classPlace, String professorName, int day, Time startTime, Time endTime) {
-        this.schedule = new Schedule();
-        this.schedule.setClassTitle(classTitle);
-        this.schedule.setClassPlace(classPlace);
-        this.schedule.setProfessorName(professorName);
-        this.schedule.setDay(day);
-        this.schedule.setStartTime(startTime);
-        this.schedule.setEndTime(endTime);
+    public Schedule createSchedule(String classTitle, String classPlace, String professorName, int day, Time startTime, Time endTime) {
+        Schedule schedule = new Schedule();
+        schedule.setClassTitle(classTitle);
+        schedule.setClassPlace(classPlace);
+        schedule.setProfessorName(professorName);
+        schedule.setDay(day);
+        schedule.setStartTime(startTime);
+        schedule.setEndTime(endTime);
+        return schedule;
     }
-
-    public Schedule getAddedSchedule() { return this.schedule; }
 
     public Schedule getAnotherSchedule(Schedule schedule, TextView textView, Dialog dialog) {
 

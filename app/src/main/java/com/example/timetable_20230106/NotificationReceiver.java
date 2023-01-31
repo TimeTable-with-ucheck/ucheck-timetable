@@ -36,14 +36,13 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "fuckingReceive 호출됨");
-        goAsync();
+        Calendar calendar = Calendar.getInstance();
         System.out.println(TAG + "onReceive 알람이 들어옴!!");
         int day = intent.getIntExtra("weekday", -1) + 2;
         String title = intent.getStringExtra("title");
-        System.out.println("입력된 날자 = " + day + " 현재 날자 =" + Calendar.DAY_OF_WEEK);
+        System.out.println("입력된 날자 = " + day + " 현재 날자 =" + calendar.get(Calendar.DAY_OF_WEEK));
         System.out.println("이름->" + title);
-        if (Calendar.DAY_OF_WEEK != day) return;
+        if (calendar.get(Calendar.DAY_OF_WEEK) != day) return;
         builder = null;
         //푸시 알림을 보내기위해 시스템에 권한을 요청하여 생성
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

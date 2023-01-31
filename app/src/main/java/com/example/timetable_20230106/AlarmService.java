@@ -23,6 +23,7 @@ public class AlarmService {
     private ArrayList<AlarmData> alarmDataList;
     NotificationReceiver notificationReceiver;
     public AlarmService(Context context){
+        System.out.println("알람 서비스 등록");
         this.context  = context;
         alarmManager= (AlarmManager) this.context.getSystemService(this.context.ALARM_SERVICE);
         alarmDataList = new ArrayList<>();
@@ -57,6 +58,8 @@ public class AlarmService {
     }
 
     public void patchAlarm(AlarmData alarmData){
+        Calendar calendar = Calendar.getInstance();
+        System.out.println("지금 시간: "+System.currentTimeMillis()+" 지금날짜: "+calendar.get(Calendar.DAY_OF_WEEK));
         if(alarmData.getIsOn())regist(alarmData);
         else unRegist(alarmData);
     }
@@ -127,9 +130,9 @@ public class AlarmService {
     public void addAlarmData(ArrayList<Schedule> schedules, Context context) {
         AlarmData alarmData = new AlarmData(schedules, context);
         this.alarmDataList.add(alarmData);
-        regist(alarmData);
+        patchAlarm(alarmData);
     }
-
+ 
     public AlarmData findAlarmData(ArrayList<Schedule> schedules){
         for(AlarmData alarmData : alarmDataList){
             if(alarmData.isTitleEqual(schedules.get(0).getClassTitle()))return alarmData;

@@ -29,7 +29,7 @@ public class SettingDialog {
         this.context = context;
     }
 
-    public void showMenu(ArrayList<Schedule> schedules, AlarmService alarmService, TimetableView Timetable) {
+    public void showMenu(ArrayList<Schedule> schedules, AlarmService alarmService, TimetableView Timetable,int idx) {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder( this.context );
         AlarmData alarmData = alarmService.findAlarmData(schedules);
@@ -51,12 +51,11 @@ public class SettingDialog {
                 alarmService.patchAlarm(alarmData);
             }
         });
-
         btn_remove = setting_dialog.findViewById(R.id.btn_remove);
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Timetable.remove(0);
+                Timetable.remove(idx);
             }
         });
 

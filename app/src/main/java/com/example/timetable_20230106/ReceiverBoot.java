@@ -20,7 +20,7 @@ public class ReceiverBoot extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("reboot");
+        System.out.println("재부팅 절차");
         alarmService = new AlarmService(context);
         SharedPreferences preferences = context.getSharedPreferences("pref", Activity.MODE_PRIVATE);
         if ((preferences != null) && (preferences.contains("alarmDataList"))) {

@@ -79,10 +79,7 @@ public class MainActivity extends AppCompatActivity {
               //  createNotification(schedules);
 //                init();
                 settingDialog = new SettingDialog(MainActivity.this);
-                settingDialog.showMenu(schedules,alarmService,Timetable);
-
-                alarmService.alarmTest();
-//                Toast.makeText(MainActivity.this,""+schedules.get(0).getClassTitle(),Toast.LENGTH_SHORT).show();
+                settingDialog.showMenu(schedules,alarmService,Timetable,idx);
                }
             /**
              * 알람 강제 발생 메소드
