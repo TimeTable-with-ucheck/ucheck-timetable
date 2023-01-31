@@ -26,7 +26,6 @@ public class AlarmService {
         this.context  = context;
         alarmManager= (AlarmManager) this.context.getSystemService(this.context.ALARM_SERVICE);
         alarmDataList = new ArrayList<>();
-        Log.d("123","알람서비스 생성!!!!!!!!!!!!!!!");
     }
     /**
      * 알람 메니저에 알람 등록
@@ -142,6 +141,14 @@ public class AlarmService {
     }
     public void setAlarmDataList(ArrayList<AlarmData> alarmDataList){
         this.alarmDataList = alarmDataList;
+    }
+
+    public void reRegistAll(){
+        if(alarmDataList != null){
+            for(AlarmData alarmData : alarmDataList){
+                patchAlarm(alarmData);
+            }
+        }
     }
 
     public void alarmTest(){

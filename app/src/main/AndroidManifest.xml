@@ -31,7 +31,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data
@@ -41,28 +40,16 @@
         <receiver
             android:name=".NotificationReceiver"
             android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.SEND_SMS">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.AIRPLANE_MODE"/>
-                <action android:name="android.intent.action.LOCALE_CHANGED"/>
-                <action android:name="com.codechacha.action.test"/>
-            </intent-filter>
+            android:exported="false">
         </receiver>
-
 
         <receiver android:name=".ReceiverBoot"
-            android:exported="true">
+            android:enabled="true"
+            android:exported="false" >
             <intent-filter>
-
-                <action android:name="android.intent.action.AIRPLANE_MODE"/>
-
-                <action android:name="android.intent.action.BOOT_COMPLETED">
-                </action>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>
