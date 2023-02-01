@@ -18,24 +18,17 @@ public class AlarmData {
     private Time[] time;
     private int[] days;
     private int[] id;
-    private Intent[] intent;
     private boolean isOn;
 
     public AlarmData(ArrayList<Schedule> schedules, Context context){
-        int hour;
-        int minute;
         time = new Time[schedules.size()];
         days = new int[schedules.size()];
         id = new int[schedules.size()];
-        intent = new Intent[schedules.size()];
         Random random = new Random();
         for(int i = 0; i<schedules.size();i++) {
             int id =random.nextInt(400);
             Schedule schedule = schedules.get(i);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                intent[i] = new Intent(context, NotificationReceiver.class);
-                intent[i].putExtra("weekday", schedule.getDay());
-                intent[i].putExtra("title", schedule.getClassTitle());
                 this.time[i] = schedule.getStartTime();
                 this.title = schedule.getClassTitle();
                 this.days[i] = schedule.getDay();
@@ -68,6 +61,7 @@ public class AlarmData {
     public Time[] getTime(){
         return this.time;
     }
+
     public String GetString(){
        String out = title+"- ison: "+isOn;
        for(int i = 0; i<time.length;i++){
@@ -78,9 +72,7 @@ public class AlarmData {
     public int[] getId(){
         return id;
     }
-    public Intent[] getIntent(){
-        return intent;
-    }
+
 
 }
 

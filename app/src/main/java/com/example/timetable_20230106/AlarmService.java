@@ -36,10 +36,14 @@ public class AlarmService {
         long intervalDay = 24 * 60 * 60 * 1000;// 24시간
         int size = alarmData.getSize();
         int[] id = alarmData.getId();
-        Intent[] intent = alarmData.getIntent();
+        int[] weekDay = alarmData.getDay();
+        String title = alarmData.getClassTitle();
         Time[] selectTimes = alarmData.getTime();
         for(int i = 0; i<size;i++) {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id[i],  intent[i], PendingIntent.FLAG_IMMUTABLE);
+            Intent intent = new Intent(context, NotificationReceiver.class);
+            intent.putExtra("weekday", weekDay[i]);
+            intent.putExtra("title", title);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id[i],intent, PendingIntent.FLAG_IMMUTABLE);
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
             calendar.set(Calendar.MINUTE, selectTimes[i].getMinute());
@@ -68,12 +72,16 @@ public class AlarmService {
      * @param alarmData
      */
     public void unRegist(AlarmData alarmData) {
-        Intent[] intents = alarmData.getIntent();
+        int[] weekDay = alarmData.getDay();
+        String title = alarmData.getClassTitle();
         int[] id = alarmData.getId();
         for(int i = 0; i<alarmData.getSize(); i++) {
+            Intent intent = new Intent(context, NotificationReceiver.class);
+            intent.putExtra("weekday", weekDay[i]);
+            intent.putExtra("title", title);
             try {
                 System.out.println("unregist: title:"+alarmData.getClassTitle()+" id: "+id[i]);
-                PendingIntent temp = PendingIntent.getBroadcast(context,id[i], intents[i],PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent temp = PendingIntent.getBroadcast(context,id[i], intent,PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.cancel(temp);
             }catch (NullPointerException e){
                 e.printStackTrace();
