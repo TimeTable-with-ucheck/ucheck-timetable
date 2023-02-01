@@ -45,8 +45,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.getAction() == Intent.ACTION_BOOT_COMPLETED)reboot(context,intent);
-        else notifi(context, intent);
+//        if(intent.getAction() == Intent.ACTION_BOOT_COMPLETED)reboot(context,intent);
+//        else notifi(context, intent);
+        notifi(context, intent);
     }
 
     private void notifi(Context context, Intent intent) {
