@@ -82,6 +82,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             intent2.setData(Uri.parse("market://details?id=" + packageName));
         }
         PendingIntent ucheckIntent = PendingIntent.getActivity(context, 12345, intent2, PendingIntent.FLAG_IMMUTABLE);
+//        PendingIntent ucheckIntent = PendingIntent.getBroadcast(context, 12345, intent2, PendingIntent.FLAG_IMMUTABLE);
 
         //알림창 제목
         builder.setContentTitle("유체크 알람"); //회의명노출

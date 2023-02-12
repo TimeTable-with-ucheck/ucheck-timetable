@@ -58,8 +58,10 @@ public class AlarmService {
             if (currentTime > selectTime) {
                 selectTime += intervalDay;
             }
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY,pendingIntent);
-            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]+ "day : " + alarmData.getDay()[0]+" , " +calendar.getTime().getDay());
+//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY,pendingIntent);
+            //
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, selectTime , pendingIntent);
+            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]+ "day : " + convertDayNumb(alarmData.getDay()[i]));
         }
 //        Log.d("d", "time : " + calendar.get)
     }
