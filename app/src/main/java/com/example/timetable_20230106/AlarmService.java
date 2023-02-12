@@ -47,8 +47,16 @@ public class AlarmService {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id[i],intent, PendingIntent.FLAG_IMMUTABLE);
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_WEEK, convertDayNumb(weekDay[i]));
-            calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
-            calendar.set(Calendar.MINUTE, selectTimes[i].getMinute());
+            if(selectTimes[i].getMinute() >= 10) {
+                calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
+                calendar.set(Calendar.MINUTE, selectTimes[i].getMinute()-10);
+            } else if(selectTimes[i].getMinute() == 5){
+                calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour()-1);
+                calendar.set(Calendar.MINUTE, 55);
+            } else {
+                calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour()-1);
+                calendar.set(Calendar.MINUTE, 50);
+            }
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             System.out.println("알람 설정:-> " + alarmData.getClassTitle() + "설정 시간: " + calendar.getTimeInMillis() + " 설정 요일" + convertDayNumb(alarmData.getDay()[i]));
