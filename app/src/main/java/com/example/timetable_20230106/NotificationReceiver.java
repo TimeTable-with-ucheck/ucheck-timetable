@@ -45,15 +45,15 @@ public class NotificationReceiver extends BroadcastReceiver {
     //수신되는 인텐트 - The Intent being received.
     @Override
     public void onReceive(Context context, Intent intent) {
-//        if(intent.getAction() == Intent.ACTION_BOOT_COMPLETED)reboot(context,intent);
-//        else notifi(context, intent);
+        if(intent.getAction() == Intent.ACTION_BOOT_COMPLETED) {
+        }
+        else notifi(context, intent);
         notifi(context, intent);
     }
-
     private void notifi(Context context, Intent intent) {
         Calendar calendar = Calendar.getInstance();
         System.out.println(TAG + "onReceive 알람이 들어옴!!");
-        int day = intent.getIntExtra("weekday", -1) + 2;
+        int day = intent.getIntExtra("weekday", -1);
         String title = intent.getStringExtra("title");
         System.out.println("입력된 날자 = " + day + " 현재 날자 =" + calendar.get(Calendar.DAY_OF_WEEK));
         System.out.println("이름->" + title);
@@ -138,5 +138,4 @@ public class NotificationReceiver extends BroadcastReceiver {
             }
         }
     }
-
 }

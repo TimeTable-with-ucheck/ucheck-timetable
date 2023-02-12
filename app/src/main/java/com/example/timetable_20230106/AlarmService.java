@@ -37,33 +37,37 @@ public class AlarmService {
         int size = alarmData.getSize();
         int[] id = alarmData.getId();
         int[] weekDay = alarmData.getDay();
+        Log.d("week : " , ""+weekDay[0]);
         String title = alarmData.getClassTitle();
         Time[] selectTimes = alarmData.getTime();
         for(int i = 0; i<size;i++) {
             Intent intent = new Intent(context, NotificationReceiver.class);
-            intent.putExtra("weekday", weekDay[i]);
+            intent.putExtra("weekday", convertDayNumb(weekDay[i]));
             intent.putExtra("title", title);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id[i],intent, PendingIntent.FLAG_IMMUTABLE);
             Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_WEEK, convertDayNumb(weekDay[i]));
             calendar.set(Calendar.HOUR_OF_DAY, selectTimes[i].getHour());
             calendar.set(Calendar.MINUTE, selectTimes[i].getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            System.out.println("알람 설정:-> " + alarmData.getClassTitle() + "설정 시간: " + calendar.getTimeInMillis() + " 설정 요일" + (alarmData.getDay()[i] + 2));
+            System.out.println("알람 설정:-> " + alarmData.getClassTitle() + "설정 시간: " + calendar.getTimeInMillis() + " 설정 요일" + convertDayNumb(alarmData.getDay()[i]));
             long selectTime = calendar.getTimeInMillis();
+            Log.d("awdawd", "time : " + selectTime);
             long currentTime = System.currentTimeMillis();
             if (currentTime > selectTime) {
                 selectTime += intervalDay;
             }
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, selectTime, AlarmManager.INTERVAL_DAY,pendingIntent);
-            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]);
+            System.out.println("regist!: title: "+alarmData.getClassTitle()+" id: "+id[i]+ "day : " + alarmData.getDay()[0]+" , " +calendar.getTime().getDay());
         }
+//        Log.d("d", "time : " + calendar.get)
     }
 
     public void patchAlarm(AlarmData alarmData){
         Calendar calendar = Calendar.getInstance();
         System.out.println("지금 시간: "+System.currentTimeMillis()+" 지금날짜: "+calendar.get(Calendar.DAY_OF_WEEK));
-        if(alarmData.getIsOn())regist(alarmData);
+        if(alarmData.getIsOn()) regist(alarmData);
         else unRegist(alarmData);
     }
 
@@ -201,5 +205,11 @@ public class AlarmService {
             if(alarmData1.isTitleEqual(alarmData.getClassTitle())) alarmDataList.remove(alarmData1);
             return;
         }
+    }
+
+    public int convertDayNumb(int numb) {
+    if(numb == 6) numb = 1;
+     else numb = numb+2;
+        return numb;
     }
 }
