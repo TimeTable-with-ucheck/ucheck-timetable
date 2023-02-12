@@ -188,7 +188,6 @@ public class AddSchedule {
                 list1.add("45");
                 list1.add("50");
                 list1.add("55");
-                list1.add("60");
                 ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list1);
                 list_time.setAdapter(adapter1);
                 

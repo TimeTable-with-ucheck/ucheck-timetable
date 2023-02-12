@@ -20,19 +20,21 @@ public class ReceiverBoot extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("재부팅 절차");
-        alarmService = new AlarmService(context);
-        SharedPreferences preferences = context.getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        if ((preferences != null) && (preferences.contains("alarmDataList"))) {
-            String alarmDataListString = preferences.getString("alarmDataList", null);
-            if (alarmDataListString != null) {
-                Gson gson = new Gson();
-                ArrayList<AlarmData> alarmDataList = gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
-                }.getType());
-                alarmService.setAlarmDataList(alarmDataList);
-                alarmService.reRegistAll();
-            } else {
-                System.out.println("in reboot list is null");
+        if (intent.getAction() == Intent.ACTION_BOOT_COMPLETED) {
+            System.out.println("재부팅 절차");
+            alarmService = new AlarmService(context);
+            SharedPreferences preferences = context.getSharedPreferences("pref", Activity.MODE_PRIVATE);
+            if ((preferences != null) && (preferences.contains("alarmDataList"))) {
+                String alarmDataListString = preferences.getString("alarmDataList", null);
+                if (alarmDataListString != null) {
+                    Gson gson = new Gson();
+                    ArrayList<AlarmData> alarmDataList = gson.fromJson(alarmDataListString, new TypeToken<ArrayList<AlarmData>>() {
+                    }.getType());
+                    alarmService.setAlarmDataList(alarmDataList);
+                    alarmService.reRegistAll();
+                } else {
+                    System.out.println("in reboot list is null");
+                }
             }
         }
     }
