@@ -1,9 +1,14 @@
 package com.example.timetable_20230106;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,7 +27,8 @@ public class SettingDialog {
     Context context;
     String string;
     Switch switch_setting;
-    Button btn_remove;
+    Button btn_remove, btn_ok;
+    TextView tv_title;
 
 
     public SettingDialog(Context context) {
@@ -31,13 +37,16 @@ public class SettingDialog {
 
     public void showMenu(ArrayList<Schedule> schedules, AlarmService alarmService, TimetableView Timetable,int idx) {
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder( this.context );
+        Dialog dialog = new Dialog(this.context);
         AlarmData alarmData = alarmService.findAlarmData(schedules);
 
-        dialog.setTitle(alarmData.getClassTitle());
-        this.setting_dialog = (View) View.inflate( this.context , R.layout.setting_dialog, null);
-        dialog.setView(this.setting_dialog);
-        this.switch_setting = setting_dialog.findViewById(R.id.switch_setting);
+//        dialog.setTitle(alarmData.getClassTitle());
+        dialog.setContentView(R.layout.setting_dialog);
+        tv_title = dialog.findViewById(R.id.tv_title);
+        tv_title.setText("  "+alarmData.getClassTitle());
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.switch_setting = dialog.findViewById(R.id.switch_setting);
         this.switch_setting.setChecked(alarmData.getIsOn());
         this.switch_setting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -45,19 +54,28 @@ public class SettingDialog {
                     alarmData.setIsOn(b);
             }
         });
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                alarmService.patchAlarm(alarmData);
+//            }
+//        });
+        this.btn_ok = dialog.findViewById(R.id.btn_ok);
+        this.btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View view) {
                 alarmService.patchAlarm(alarmData);
+                dialog.dismiss();
             }
         });
-        btn_remove = setting_dialog.findViewById(R.id.btn_remove);
+        btn_remove = dialog.findViewById(R.id.btn_remove);
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Timetable.remove(idx);
                 alarmService.unRegist(alarmData);
                 alarmService.removeAlarmData(alarmData);
+                dialog.dismiss();
             }
         });
 

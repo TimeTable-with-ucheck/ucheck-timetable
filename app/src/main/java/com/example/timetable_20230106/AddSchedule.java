@@ -5,6 +5,8 @@ import static android.view.View.*;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,6 +59,7 @@ public class AddSchedule {
         this.dialog = new Dialog(this.context);
         this.dialog.setContentView(R.layout.add_schedule_dialog);
         this.dialog.show();
+        this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.set_name = dialog.findViewById(R.id.set_name);
         this.set_professor = dialog.findViewById(R.id.set_professor);
         this.set_place = dialog.findViewById(R.id.set_place);
